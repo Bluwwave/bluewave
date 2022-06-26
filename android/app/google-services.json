@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "39445181462",
+    "project_id": "bluewave-9be8f",
+    "storage_bucket": "bluewave-9be8f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39445181462:android:67e902480c4f94fa27b137",
+        "android_client_info": {
+          "package_name": "com.bluewave.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39445181462-a33hi8kibkssabkdklpe3pvcvp71giq7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bluewave.app",
+            "certificate_hash": "d8fa8e4252e6cccacc7374cf1357c43ffa7607e1"
+          }
+        },
+        {
+          "client_id": "39445181462-14a67oi1fgmfrpt7c0fj68cfbathsakn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD2InkF8DzEypQkPxk83UUo7_deODDEUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "39445181462-14a67oi1fgmfrpt7c0fj68cfbathsakn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
