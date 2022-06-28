@@ -8,22 +8,14 @@ class GoogleSignInProvider extends ChangeNotifier{
   //Rx<LoginPageModel> loginPageModelObj = LoginPageModel().obs;
   // var _googleSignin = GoogleSignIn();
   // var googleAccount = Rx<GoogleSignInAccount?>(null);
-  final googleSignIn = GoogleSignIn();
-
-  GoogleSignInAccount? _user;
-  // GoogleSignInAccount get user {
-  //   if (_user != null){
-  //     return _user!;
-  //   }
-  //   return;
-  // }
-  GoogleSignInAccount get user => _user!;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  late GoogleSignInAccount googleSignInAccount;
 
 
   Future login() async {
     final googleUser = await googleSignIn.signIn();
     if (googleUser == null) return;
-    _user = googleUser;
+    googleSignInAccount = googleUser;
 
     final googleAuth = await googleUser.authentication;
 

@@ -32,25 +32,27 @@ class _LoginPageState extends State<LoginPage> {
   late Future<LoginResponseModel> profile_page;
 
   Widget build(BuildContext context) => Scaffold(
-
-    // body: StreamBuilder(
-    //   stream: FirebaseAuth.instance.authStateChanges(),
-    //   builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-    //     //maybe create a response model and using it to check here?
-    //     if (snapshot.connectionState == ConnectionState.waiting){
-    //       return Center(child: CircularProgressIndicator());
-    //     } else if (snapshot.hasData){
-    //       return MainMatchesPageScreen();
-    //     } else if (snapshot.hasError){
-    //       return Center(child: Text('Something Went Wrong!'));
-    //     } else {
-    //       return buildLoginPage();
-    //     }
-    //   },
-    // )
-    //
-    // if (request)
+      // body: showWidget()
+    body: StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+        //maybe create a response model and using it to check here?
+        if (snapshot.connectionState == ConnectionState.waiting){
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData){
+          return MainMatchesPageScreen();
+        } else if (snapshot.hasError){
+          return Center(child: Text('Something Went Wrong!'));
+        } else {
+          return buildLoginPage();
+        }
+      },
+    )
   );
+  //
+  // showWidget(){
+  //   if (profile_page.)
+  // }
 
   buildLoginPage(){
     return  Scaffold(
@@ -305,7 +307,8 @@ class _LoginPageState extends State<LoginPage> {
     // print(login(requestModel));
     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     provider.login();
-    profile_page = APIService().login(UserModel(email: provider.user.email));
+    final user = FirebaseAuth.instance.currentUser;
+    profile_page = APIService().login(UserModel(email: user?.email));
   }
 }
 

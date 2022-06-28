@@ -23,7 +23,7 @@ class LoginResponseModel{
 }
 
 class UserModel{
-  String email;
+  String? email;
 
   UserModel({
     required this.email,
@@ -35,7 +35,7 @@ class UserModel{
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> map = {
-      'email': email.trim(),
+      'email': email?.trim(),
     };
     return map;
   }

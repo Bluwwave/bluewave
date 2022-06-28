@@ -8,7 +8,7 @@ class APIService {
   Future<LoginResponseModel> login(UserModel user) async{
     String url = "http://127.0.0.1:8000/login";
 
-    final response = await http.post(Uri.parse(url), body: jsonEncode(user);
+    final response = await http.post(Uri.parse(url), body: jsonEncode(user));
         if (response.statusCode == 200 || response.statusCode == 400){
       return LoginResponseModel.fromJson(json.decode(response.body));
     } else {
