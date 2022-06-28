@@ -56,10 +56,10 @@ class AppRoutes {
     ),
     GetPage(
       name: loginPageScreen,
-      page: () => LoginPageScreen(),
-      bindings: [
-        LoginPageBinding(),
-      ],
+      page: () => LoginPage(),
+      // bindings: [
+      //   LoginPageBinding(),
+      // ],
     ),
     GetPage(
       name: mainMatchesPageScreen,
@@ -105,10 +105,10 @@ class AppRoutes {
     ),
     GetPage(
       name: initialRoute,
-      page: () => LoginPageScreen(),
-      bindings: [
-        LoginPageBinding(),
-      ],
+      page: () => LoginPage(),
+      // bindings: [
+      //   LoginPageBinding(),
+      // ],
     )
   ];
 }

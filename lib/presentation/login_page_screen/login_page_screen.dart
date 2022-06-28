@@ -1,28 +1,56 @@
+import 'package:bluewave/presentation/login_page_screen/models/login_page_model.dart';
+import 'package:bluewave/presentation/login_page_screen/provider/google_provider.dart';
+import 'package:bluewave/presentation/main_matches_page_screen/main_matches_page_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import 'controller/login_page_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bluewave/data/api/api_client.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState()
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class LoginPageScreen extends GetWidget<LoginPageController> {
-  final controller = Get.put(LoginPageController());
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Obx((){
-      if (controller.googleAccount.value == null)
-        return buildLoginPage();
-      else
-        return GoToMandatoryInfoPage();
-      }),
-    );
-  }
+class _LoginPageState extends State<LoginPage> {
+  // late LoginRequestModel requestModel;
+  //
+  // @override
+  // void initState(){
+  //   super.initState();
+  //   requestModel = new LoginRequestModel();
+  // }
+  // @override
+  // Widget build(BuildContext context){
+  //   return buildLoginPage();
+  // }
+
+  late Future<LoginResponseModel> profile_page;
+
+  Widget build(BuildContext context) => Scaffold(
+
+    // body: StreamBuilder(
+    //   stream: FirebaseAuth.instance.authStateChanges(),
+    //   builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+    //     //maybe create a response model and using it to check here?
+    //     if (snapshot.connectionState == ConnectionState.waiting){
+    //       return Center(child: CircularProgressIndicator());
+    //     } else if (snapshot.hasData){
+    //       return MainMatchesPageScreen();
+    //     } else if (snapshot.hasError){
+    //       return Center(child: Text('Something Went Wrong!'));
+    //     } else {
+    //       return buildLoginPage();
+    //     }
+    //   },
+    // )
+    //
+    // if (request)
+  );
 
   buildLoginPage(){
     return  Scaffold(
@@ -269,12 +297,16 @@ class LoginPageScreen extends GetWidget<LoginPageController> {
                         ])))));
   }
 
-  GoToMandatoryInfoPage(){
-    Get.toNamed(AppRoutes.mandatoryInfoPageScreen);
-  }
-
   onTapTxtLoginwithgoog() {
      // Get.toNamed(AppRoutes.mandatoryInfoPageScreen);
-    controller.login();
+    // controller.login();
+    // requestModel.email =
+    //requestModel.email = provider.user.email;
+    // print(login(requestModel));
+    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+    provider.login();
+    profile_page = APIService().login(UserModel(email: provider.user.email));
   }
 }
+
+
