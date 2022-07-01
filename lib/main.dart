@@ -32,6 +32,7 @@
 //
 import 'package:bluewave/presentation/login_page_screen/login_page_screen.dart';
 import 'package:bluewave/presentation/login_page_screen/provider/google_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -63,7 +64,8 @@ class MyApp extends StatelessWidget {
         fallbackLocale: Locale('en', 'US'),
         title: 'bluewave',
         initialBinding: InitialBindings(),
-        initialRoute: AppRoutes.initialRoute,
+        initialRoute: AppRoutes.loginPageScreen,
+        //initialRoute: FirebaseAuth.instance.currentUser != null ?  AppRoutes.loginPageScreen: AppRoutes.mainMatchesPageScreen,
         getPages: AppRoutes.pages,
         ),
   );

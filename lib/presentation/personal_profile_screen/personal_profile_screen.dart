@@ -1,3 +1,6 @@
+import 'package:provider/provider.dart';
+
+import '../login_page_screen/provider/google_provider.dart';
 import 'controller/personal_profile_controller.dart';
 import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
@@ -149,7 +152,34 @@ class PersonalProfileScreen extends GetWidget<PersonalProfileController> {
                                                           .copyWith(
                                                               fontSize:
                                                                   getFontSize(
-                                                                      15)))))
+                                                                      15))))),
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                                                    provider.login();
+                                                  },
+                                                  child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: getHorizontalSize(
+                                                              15.00),
+                                                          top: getVerticalSize(
+                                                              36.00),
+                                                          right: getHorizontalSize(
+                                                              15.00)),
+                                                      child: Text(
+                                                          "Log out".tr,
+                                                          overflow:
+                                                          TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.left,
+                                                          style: AppStyle
+                                                              .textstyleinterregular153
+                                                              .copyWith(
+                                                              fontSize:
+                                                              getFontSize(
+                                                                  15)))))
+                                          )
                                         ])
                                   ]))))),
               Container(

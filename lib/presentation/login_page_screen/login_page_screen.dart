@@ -11,6 +11,8 @@ import 'package:bluewave/data/api/api_client.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../mandatory_info_page_screen/mandatory_info_page_screen.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -37,15 +39,37 @@ class _LoginPageState extends State<LoginPage> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
         //maybe create a response model and using it to check here?
+        // if (snapshot.connectionState == ConnectionState.waiting){
+        //   return Center(child: CircularProgressIndicator());
+        // } else if (snapshot.hasData){
+        //   return MainMatchesPageScreen();
+        // } else if (snapshot.hasError){
+        //   return Center(child: Text('Something Went Wrong!'));
+        // } else {
+        //   return buildLoginPage();
+        // }
+        //return buildLoginPage();
         if (snapshot.connectionState == ConnectionState.waiting){
           return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData){
-          return MainMatchesPageScreen();
-        } else if (snapshot.hasError){
+        }  else if (snapshot.hasError){
           return Center(child: Text('Something Went Wrong!'));
+        } else if (snapshot.hasData){
+          //if(FirebaseAuth.instance.currentUser != null){
+            return MainMatchesPageScreen();
+          //}
         } else {
           return buildLoginPage();
         }
+
+        // if (snapshot.connectionState == ConnectionState.waiting){
+        //   return Center(child: CircularProgressIndicator());
+        // } else if (snapshot.hasData){
+        //   return MainMatchesPageScreen();
+        // } else if (snapshot.hasError){
+        //   return Center(child: Text('Something Went Wrong!'));
+        // } else {
+        //   return buildLoginPage();
+        // }
       },
     )
   );
@@ -308,7 +332,16 @@ class _LoginPageState extends State<LoginPage> {
     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     provider.login();
     final user = FirebaseAuth.instance.currentUser;
-    profile_page = APIService().login(UserModel(email: user?.email));
+    // late LoginResponseModel response;
+    APIService().login(UserModel(email: user?.email)).then((value){
+      LoginResponseModel response = value;
+      if (response.pageToGo == "Match Page"){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainMatchesPageScreen()));
+      } else if (response.pageToGo == "Signup Mandatory"){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MandatoryInfoPageScreen()));
+      }
+    });
+
   }
 }
 
