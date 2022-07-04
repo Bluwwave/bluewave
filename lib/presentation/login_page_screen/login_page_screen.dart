@@ -1,6 +1,7 @@
 import 'package:bluewave/presentation/login_page_screen/models/login_page_model.dart';
 import 'package:bluewave/presentation/login_page_screen/provider/google_provider.dart';
 import 'package:bluewave/presentation/main_matches_page_screen/main_matches_page_screen.dart';
+import 'package:bluewave/presentation/profile_changing_page_screen/profile_changing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -19,64 +20,96 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // late LoginRequestModel requestModel;
+  // Future<String>? pageToGo;
   //
   // @override
   // void initState(){
   //   super.initState();
-  //   requestModel = new LoginRequestModel();
+  //   pageToGo = getPageToGo();
   // }
   // @override
   // Widget build(BuildContext context){
   //   return buildLoginPage();
   // }
+  //
+  //
+  // Widget build(BuildContext context){
+  //   return Scaffold(
+  //     body: FutureBuilder(
+  //       future: pageToGo,
+  //       initialData: "Login Page",
+  //       builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+  //         if (snapshot.connectionState == ConnectionState.waiting){
+  //           return Center(child: CircularProgressIndicator());
+  //         }  else if (snapshot.hasError) {
+  //           return Center(child: Text('Something Went Wrong!'));
+  //         } else if (snapshot.hasData){
+  //           print("hasData: " + snapshot.data.toString());
+  //           if (snapshot.data == "Signup Mandatory"){
+  //             return MandatoryInfoPageScreen();
+  //           } else if (snapshot.data == "Edit Profile"){
+  //             return ProfileChangingPageScreen();
+  //           } else if (snapshot.data == "Match Page"){
+  //             return MainMatchesPageScreen();
+  //           }
+  //           return buildLoginPage();
+  //         } else {
+  //           return buildLoginPage();
+  //         }
+  //       },
+  //     )
+  //   );
+  // }
 
-  late Future<LoginResponseModel> profile_page;
 
   Widget build(BuildContext context) => Scaffold(
       // body: showWidget()
     body: StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-        //maybe create a response model and using it to check here?
-        // if (snapshot.connectionState == ConnectionState.waiting){
-        //   return Center(child: CircularProgressIndicator());
-        // } else if (snapshot.hasData){
-        //   return MainMatchesPageScreen();
-        // } else if (snapshot.hasError){
-        //   return Center(child: Text('Something Went Wrong!'));
-        // } else {
-        //   return buildLoginPage();
-        // }
         //return buildLoginPage();
         if (snapshot.connectionState == ConnectionState.waiting){
           return Center(child: CircularProgressIndicator());
         }  else if (snapshot.hasError){
           return Center(child: Text('Something Went Wrong!'));
-        } else if (snapshot.hasData){
-          //if(FirebaseAuth.instance.currentUser != null){
+        } else if (snapshot.hasData) {
+          String pageToGo = getPageToGo().toString();
+          if (pageToGo == "Signup Mandatory"){
+            return MandatoryInfoPageScreen();
+          } else if (pageToGo == "Edit Profile"){
+            return ProfileChangingPageScreen();
+          } else if (pageToGo == "Match Page"){
             return MainMatchesPageScreen();
-          //}
-        } else {
+          }
+          return buildLoginPage();
+
+          // getPageToGo().then((value) => {
+          //   if (value == "Signup Mandatory"){
+          //     return MandatoryInfoPageScreen();
+          //   } else if (value == "Edit Profile") {
+          //     return ProfileChangingPageScreen();
+          //   } else if (value == "Match Page") {
+          //     return MainMatchesPageScreen();
+          //   }
+          //   return LoginPage();
+      // })
+          //return MainMatchesPageScreen();
+        } else{
           return buildLoginPage();
         }
-
-        // if (snapshot.connectionState == ConnectionState.waiting){
-        //   return Center(child: CircularProgressIndicator());
-        // } else if (snapshot.hasData){
-        //   return MainMatchesPageScreen();
-        // } else if (snapshot.hasError){
-        //   return Center(child: Text('Something Went Wrong!'));
-        // } else {
-        //   return buildLoginPage();
-        // }
       },
     )
   );
-  //
-  // showWidget(){
-  //   if (profile_page.)
-  // }
+
+  Future<String> getPageToGo() async{
+    if (FirebaseAuth.instance.currentUser == null){
+      return "Login Page";
+    }
+    print(FirebaseAuth.instance.currentUser?.email);
+    LoginResponseModel loginResponse = await APIService().login(UserModel(email: FirebaseAuth.instance.currentUser?.email));
+    print("getPageToGo:" + loginResponse.pageToGo.toString());
+    return loginResponse.pageToGo.toString();
+  }
 
   buildLoginPage(){
     return  Scaffold(

@@ -1,3 +1,4 @@
+import 'package:bluewave/presentation/login_page_screen/login_page_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../login_page_screen/provider/google_provider.dart';
@@ -158,7 +159,7 @@ class PersonalProfileScreen extends GetWidget<PersonalProfileController> {
                                               child: GestureDetector(
                                                   onTap: () {
                                                     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-                                                    provider.login();
+                                                    provider.logout().then((value){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));});
                                                   },
                                                   child: Padding(
                                                       padding: EdgeInsets.only(

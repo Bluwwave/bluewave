@@ -10,12 +10,16 @@ class APIService {
   Future<LoginResponseModel> login(UserModel user) async{
     String loginUrl = url + "/login";
 
-    final response = await http.post(Uri.parse(loginUrl), body: jsonEncode(user));
-    // if (response.statusCode == 200 || response.statusCode == 400){
-    //   return LoginResponseModel.fromJson(json.decode(response.body));
-    // } else {
-    //   throw Exception('Failed to load data');
-    // }
-    return LoginResponseModel.fromJson(json.decode(response.body));
+    final response = await http.post(Uri.parse(loginUrl), headers:{'content-type': 'application/json; charset=UTF-8'} ,body: jsonEncode({'email': user.email}));
+    final message = json.decode(response.body);
+    print("api print: " + message.toString());
+    if (response.statusCode == 200 || response.statusCode == 400){
+      return LoginResponseModel.fromJson(message);
+    } else if (response.statusCode == 500){
+      throw Exception('Failed to load data');
+    } else {
+      throw Exception('Unknown error');
+    }
+    // return LoginResponseModel.fromJson(json.decode(response.body));
   }
 }

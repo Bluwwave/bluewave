@@ -3,6 +3,9 @@ import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 class MandatoryInfoPageScreen extends GetWidget<MandatoryInfoPageController> {
+
+  final textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -109,7 +112,7 @@ class MandatoryInfoPageScreen extends GetWidget<MandatoryInfoPageController> {
                                                 ])),
                                         Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Row(
+                                            child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
@@ -118,27 +121,43 @@ class MandatoryInfoPageScreen extends GetWidget<MandatoryInfoPageController> {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Container(
-                                                      height: getVerticalSize(
-                                                          28.00),
-                                                      width: getHorizontalSize(
-                                                          140.00),
-                                                      margin: EdgeInsets.only(
+                                                    height: getVerticalSize(
+                                                        28.00),
+                                                    width: getHorizontalSize(
+                                                        140.00),
+                                                    margin: EdgeInsets.only(
                                                           left:
                                                               getHorizontalSize(
                                                                   16.00)),
-                                                      decoration: BoxDecoration(
-                                                          color: ColorConstant
-                                                              .deepOrange50,
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                  getHorizontalSize(
-                                                                      2.00)),
-                                                          border: Border.all(
-                                                              color: ColorConstant
-                                                                  .bluegray400,
-                                                              width:
-                                                                  getHorizontalSize(
-                                                                      1.00)))),
+                                                    child: TextFormField(
+                                                      decoration: InputDecoration(
+                                                        fillColor: ColorConstant.deepOrange50,
+                                                        filled: true,
+                                                        // border: BorderRadius.circular(getHorizontalSize(2.00))
+                                                      ),
+                                                    )
+                                                      // height: getVerticalSize(
+                                                      //     28.00),
+                                                      // width: getHorizontalSize(
+                                                      //     140.00),
+                                                      // margin: EdgeInsets.only(
+                                                      //     left:
+                                                      //         getHorizontalSize(
+                                                      //             16.00)),
+                                                      // decoration: BoxDecoration(
+                                                      //     color: ColorConstant
+                                                      //         .deepOrange50,
+                                                      //     borderRadius:
+                                                      //         BorderRadius.circular(
+                                                      //             getHorizontalSize(
+                                                      //                 2.00)),
+                                                      //     border: Border.all(
+                                                      //         color: ColorConstant
+                                                      //             .bluegray400,
+                                                      //         width:
+                                                      //             getHorizontalSize(
+                                                      //                 1.00)))
+                    ),
                                                   Container(
                                                       height: getVerticalSize(
                                                           28.00),
@@ -193,8 +212,7 @@ class MandatoryInfoPageScreen extends GetWidget<MandatoryInfoPageController> {
                                                     getHorizontalSize(328.00),
                                                 child: TextFormField(
                                                     focusNode: FocusNode(),
-                                                    controller: controller
-                                                        .emailController,
+                                                    controller: textController,
                                                     decoration: InputDecoration(
                                                         enabledBorder: OutlineInputBorder(
                                                             borderRadius:

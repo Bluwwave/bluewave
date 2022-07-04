@@ -8,8 +8,9 @@ class LoginResponseModel{
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) => LoginResponseModel(
     pageToGo: json["profile_status"],
-    statuscode: json["status"], //this will be the status from api, name might be different
+    statuscode: json["statuscode"], //this will be the status from api, name might be different
   );
+
 
 
   // final String? token;
