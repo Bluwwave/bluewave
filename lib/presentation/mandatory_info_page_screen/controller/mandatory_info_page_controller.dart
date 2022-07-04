@@ -6,8 +6,8 @@ class MandatoryInfoPageController extends GetxController
     with StateMixin<dynamic> {
   TextEditingController emailController = TextEditingController();
 
-  Rx<MandatoryInfoPageModel> mandatoryInfoPageModelObj =
-      MandatoryInfoPageModel().obs;
+  // Rx<MandatoryInfoPageModel> mandatoryInfoPageModelObj =
+  //     MandatoryInfoPageModel().obs;
 
   @override
   void onReady() {

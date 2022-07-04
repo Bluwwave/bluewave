@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../presentation/login_page_screen/models/login_page_model.dart';
+import '../../presentation/mandatory_info_page_screen/models/mandatory_info_page_model.dart';
 
 class APIService {
   final url = "https://bluewave.mlbrains.com";
@@ -21,5 +22,13 @@ class APIService {
       throw Exception('Unknown error');
     }
     // return LoginResponseModel.fromJson(json.decode(response.body));
+  }
+
+  Future<void> storeMandatoryInfo(MandatoryInfoModel user) async{
+    String infoUrl = url + "/mandatory_signup";
+    print(user.firstName);
+    print(user.lastName);
+    print(user.email);
+    http.put(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email, 'first_name': user.firstName, 'last_name': user.lastName }));
   }
 }
