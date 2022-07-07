@@ -1,11 +1,11 @@
 name: bluewave
 description: A new Flutter project.
 version: 1.0.0+1
-environment: 
+environment:
   sdk: '>=2.12.0 <3.0.0'
 dependencies:
   http:
-  flutter: 
+  flutter:
     sdk: flutter
   get: ^4.6.1
   pull_to_refresh: ^2.0.0
@@ -22,21 +22,22 @@ dependencies:
   #State Management
   provider: ^5.0.0
   firebase_core: ^1.18.0
+  getwidget: ^3.0.1
 
-dev_dependencies: 
-  flutter_test: 
+dev_dependencies:
+  flutter_test:
     sdk: flutter
-flutter: 
+flutter:
   uses-material-design: true
-  assets: 
+  assets:
     - assets/
     - assets/images/
-  fonts: 
+  fonts:
     - family: Inter
-      fonts: 
+      fonts:
         - asset: assets/fonts/interregular400.ttf
           weight: 400
     - family: Asap
-      fonts: 
+      fonts:
         - asset: assets/fonts/asapasapromanregular400.ttf
           weight: 400

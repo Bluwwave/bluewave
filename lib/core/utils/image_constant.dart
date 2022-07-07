@@ -38,4 +38,6 @@ class ImageConstant {
   static String imgImage62 = 'assets/images/img_image6_2.png';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  static String defaultProfilePic = 'assets/images/defaultProfilePic.jpg';
 }

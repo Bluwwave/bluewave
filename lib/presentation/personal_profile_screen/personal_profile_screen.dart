@@ -225,6 +225,23 @@ class PersonalProfileScreen extends GetWidget<PersonalProfileController> {
             ])));
   }
 
+  header(){
+    return Container(
+      padding: EdgeInsets.only(
+          left: getHorizontalSize(16.00),
+          top: getVerticalSize(13.00),
+          right: getHorizontalSize(16.00),
+          bottom: getVerticalSize(19.00)),
+      color: ColorConstant.deepOrange300,
+      child: Text("Sign Up",
+          overflow:
+          TextOverflow.ellipsis,
+          textAlign: TextAlign.left,
+          style: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15))
+      ),
+    );
+  }
+
   onTapTxtEditprofile() {
     Get.toNamed(AppRoutes.profileChangingPageScreen);
   }

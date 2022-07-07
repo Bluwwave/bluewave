@@ -253,50 +253,6 @@ class AllChatsScreen extends GetWidget<AllChatsController> {
                       width: getHorizontalSize(358.00),
                       child: Stack(alignment: Alignment.centerLeft, children: [
                         Align(
-                            alignment: Alignment.center,
-                            child: Padding(
-                                padding: EdgeInsets.only(
-                                    top: getVerticalSize(6.00),
-                                    bottom: getVerticalSize(4.00)),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: getVerticalSize(3.00)),
-                                          child: Image.asset(
-                                              ImageConstant.imgGroup31,
-                                              height: getVerticalSize(37.00),
-                                              width: getHorizontalSize(36.00),
-                                              fit: BoxFit.fill)),
-                                      GestureDetector(
-                                          onTap: () {
-                                            onTapImgGroup4();
-                                          },
-                                          child: Image.asset(
-                                              ImageConstant.imgGroup41,
-                                              height: getVerticalSize(40.00),
-                                              width: getHorizontalSize(56.50),
-                                              fit: BoxFit.fill)),
-                                      GestureDetector(
-                                          onTap: () {
-                                            onTapImgImage6();
-                                          },
-                                          child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      getHorizontalSize(20.00)),
-                                              child: Image.asset(
-                                                  ImageConstant.imgImage62,
-                                                  height: getSize(40.00),
-                                                  width: getSize(40.00),
-                                                  fit: BoxFit.fill)))
-                                    ]))),
-                        Align(
                             alignment: Alignment.centerLeft,
                             child: Container(
                                 decoration: BoxDecoration(
@@ -317,28 +273,28 @@ class AllChatsScreen extends GetWidget<AllChatsController> {
                                               height: getVerticalSize(37.00),
                                               width: getHorizontalSize(36.00),
                                               fit: BoxFit.fill)),
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                              top: getVerticalSize(6.00),
-                                              bottom: getVerticalSize(4.00)),
+                                      GestureDetector(
+                                          onTap: () {
+                                            onTapImgGroup4();
+                                          },
                                           child: Image.asset(
-                                              ImageConstant.imgGroup42,
+                                              ImageConstant.imgGroup41,
                                               height: getVerticalSize(40.00),
                                               width: getHorizontalSize(56.50),
                                               fit: BoxFit.fill)),
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                              top: getVerticalSize(6.00),
-                                              bottom: getVerticalSize(4.00)),
+                                      GestureDetector(
+                                          onTap: () {
+                                            onTapImgImage6();
+                                          },
                                           child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      getHorizontalSize(20.00)),
-                                              child: Image.asset(
-                                                  ImageConstant.imgImage63,
-                                                  height: getSize(40.00),
-                                                  width: getSize(40.00),
-                                                  fit: BoxFit.fill)))
+                                            borderRadius:
+                                                BorderRadius.circular(
+                                                    getHorizontalSize(20.00)),
+                                            child: Image.asset(
+                                                ImageConstant.imgImage62,
+                                                height: getSize(40.00),
+                                                width: getSize(40.00),
+                                                fit: BoxFit.fill)))
                                     ])))
                       ])))
             ])));

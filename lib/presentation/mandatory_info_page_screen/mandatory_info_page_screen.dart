@@ -39,7 +39,7 @@ class MandatoryInfoPageState extends State<MandatoryInfoPageScreen>{
                   right: getHorizontalSize(16.00),
                   bottom: getVerticalSize(19.00)),
                 color: ColorConstant.deepOrange300,
-                child: Text("Sign Up",
+                child: Text("Mandatory Info",
                     overflow:
                       TextOverflow.ellipsis,
                       textAlign: TextAlign.left,
