@@ -6,7 +6,22 @@ import 'controller/personal_profile_controller.dart';
 import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 
-class PersonalProfileScreen extends GetWidget<PersonalProfileController> {
+class PersonalProfileScreen extends StatefulWidget {
+  String email;
+  PersonalProfileScreen(this.email);
+
+  @override
+  _PersonalProfilePageState createState() => _PersonalProfilePageState();
+}
+
+
+class _PersonalProfilePageState extends State<PersonalProfileScreen>{
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -243,7 +258,7 @@ class PersonalProfileScreen extends GetWidget<PersonalProfileController> {
   }
 
   onTapTxtEditprofile() {
-    Get.toNamed(AppRoutes.profileChangingPageScreen);
+    Get.toNamed(AppRoutes.profileChangingPageScreen, arguments: widget.email);
   }
 
   onTapImgGroup2() {
@@ -251,6 +266,6 @@ class PersonalProfileScreen extends GetWidget<PersonalProfileController> {
   }
 
   onTapImgGroup5() {
-    Get.toNamed(AppRoutes.mainMatchesPageScreen);
+    Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
   }
 }

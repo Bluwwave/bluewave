@@ -1,4 +1,5 @@
 import 'package:bluewave/core/app_export.dart';
+import 'package:bluewave/presentation/profile_changing_page_screen/models/profile_changing_page_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -11,13 +12,13 @@ class APIService {
   Future<LoginResponseModel> login(UserModel user) async{
     String loginUrl = url + "/login";
 
-    print("useremail: " + user.email.toString());
+    // print("useremail: " + user.email.toString());
     final response = await http.post(Uri.parse(loginUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email}));
-    print("response body: " + response.body);
+    // print("api login response body: " + response.body);
     final message = json.decode(response.body);
-    print("api print: " + message.toString());
+    // print("api login print: " + message.toString());
     if (response.statusCode == 200 || response.statusCode == 400){
-      print(LoginResponseModel.fromJson(message));
+      // print(LoginResponseModel.fromJson(message));
       return LoginResponseModel.fromJson(message);
     } else if (response.statusCode == 500){
       throw Exception('Failed to load data');
@@ -29,9 +30,22 @@ class APIService {
 
   Future<void> storeMandatoryInfo(MandatoryInfoModel user) async{
     String infoUrl = url + "/mandatory_signup";
-    print(user.firstName);
-    print(user.lastName);
-    print(user.email);
-    http.put(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email, 'first_name': user.firstName, 'last_name': user.lastName }));
+    await http.post(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email, 'first_name': user.firstName, 'last_name': user.lastName }));
+  }
+
+  Future<InitialProfileModel> getChoices(String? email) async{
+    String getProfileUrl = url + "/get_profile";
+    final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
+    final message = json.decode(response.body);
+    print("get choices response" + message.toString());
+    InitialProfileModel initialProfile = InitialProfileModel.fromJson(message);
+    print(initialProfile.toString());
+    print(initialProfile.hobbies);
+    return InitialProfileModel.fromJson(message);
+  }
+
+  Future<void> updateProfileInfo(UpdatedProfileModel updatedProfile) async{
+    String updateProfileUrl = url + "/optional_signup";
+    await http.post(Uri.parse(updateProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode(updatedProfile));
   }
 }

@@ -23,10 +23,13 @@ dependencies:
   provider: ^5.0.0
   firebase_core: ^1.18.0
   getwidget: ^3.0.1
+#  image_picker: ^0.8.1
+#  image_cropper: ^2.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 flutter:
   uses-material-design: true
   assets:

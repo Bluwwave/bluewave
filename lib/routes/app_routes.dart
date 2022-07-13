@@ -42,14 +42,14 @@ class AppRoutes {
   static List<GetPage> pages = [
     GetPage(
       name: profileChangingPageScreen,
-      page: () => ProfileChangingPageScreen(),
-      bindings: [
-        ProfileChangingPageBinding(),
-      ],
+      page: () => ProfileChangingPage(Get.arguments),
+      // bindings: [
+      //   ProfileChangingPageBinding(),
+      // ],
     ),
     GetPage(
       name: mandatoryInfoPageScreen,
-      page: () => MandatoryInfoPageScreen(),
+      page: () => MandatoryInfoPage(Get.arguments),
       bindings: [
         MandatoryInfoPageBinding(),
       ],
@@ -63,7 +63,7 @@ class AppRoutes {
     ),
     GetPage(
       name: mainMatchesPageScreen,
-      page: () => MainMatchesPageScreen(),
+      page: () => MainMatchesPageScreen(Get.arguments),
       bindings: [
         MainMatchesPageBinding(),
       ],
@@ -91,7 +91,7 @@ class AppRoutes {
     ),
     GetPage(
       name: personalProfileScreen,
-      page: () => PersonalProfileScreen(),
+      page: () => PersonalProfileScreen(Get.arguments),
       bindings: [
         PersonalProfileBinding(),
       ],

@@ -1,8 +1,14 @@
+
+import 'package:bluewave/presentation/match_profile_page_screen/match_profile_page_screen.dart';
+
 import 'controller/main_matches_page_controller.dart';
 import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 class MainMatchesPageScreen extends GetWidget<MainMatchesPageController> {
+  String email;
+  MainMatchesPageScreen(this.email);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -362,19 +368,19 @@ class MainMatchesPageScreen extends GetWidget<MainMatchesPageController> {
   }
 
   onTapEllipse1() {
-    Get.toNamed(AppRoutes.matchProfilePageScreen);
+    Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapGroup10() {
-    Get.toNamed(AppRoutes.matchProfilePageScreen);
+    Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapGroup9() {
-    Get.toNamed(AppRoutes.matchProfilePageScreen);
+    Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapGroup8() {
-    Get.toNamed(AppRoutes.matchProfilePageScreen);
+    Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapImgGroup1() {
@@ -382,6 +388,6 @@ class MainMatchesPageScreen extends GetWidget<MainMatchesPageController> {
   }
 
   onTapImgImage6() {
-    Get.toNamed(AppRoutes.personalProfileScreen);
+    Get.toNamed(AppRoutes.personalProfileScreen, arguments: email);
   }
 }

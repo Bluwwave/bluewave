@@ -1,5 +1,6 @@
 import 'package:bluewave/data/api/api_client.dart';
 import 'package:bluewave/presentation/mandatory_info_page_screen/models/mandatory_info_page_model.dart';
+import 'package:bluewave/presentation/profile_changing_page_screen/profile_changing_page_screen.dart';
 
 import 'controller/mandatory_info_page_controller.dart';
 import 'package:bluewave/core/app_export.dart';
@@ -9,14 +10,17 @@ import 'package:bluewave/data/api/api_client.dart';
 
 
 
-class MandatoryInfoPageScreen extends StatefulWidget {
+class MandatoryInfoPage extends StatefulWidget {
+  final String email;
+  MandatoryInfoPage(this.email);
+
   @override
   State<StatefulWidget> createState() {
     return MandatoryInfoPageState();
   }
 }
 
-class MandatoryInfoPageState extends State<MandatoryInfoPageScreen>{
+class MandatoryInfoPageState extends State<MandatoryInfoPage>{
 
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -127,10 +131,10 @@ class MandatoryInfoPageState extends State<MandatoryInfoPageScreen>{
     final firstName = firstNameController.text;
     final lastName = lastNameController.text;
     if (firstName.isNotEmpty && lastName.isNotEmpty){
-      final email = FirebaseAuth.instance.currentUser?.email;
-      final user = MandatoryInfoModel(email: email, firstName: firstName, lastName: lastName);
+      final user = MandatoryInfoModel(email: widget.email, firstName: firstName, lastName: lastName);
       await APIService().storeMandatoryInfo(user);
-      Get.toNamed(AppRoutes.profileChangingPageScreen);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileChangingPage(user.email!)));
+      // Get.toNamed(AppRoutes.profileChangingPageScreen, arguments:widget.email);
     } else {
       setState(() {
         firstName.isEmpty ? fNameEmpty = true : fNameEmpty = false;

@@ -1,15 +1,92 @@
+import 'dart:io';
+import 'package:bluewave/data/api/api_client.dart';
 import 'package:getwidget/getwidget.dart';
+// import 'package:image_picker/image_picker.dart';
+import '../main_matches_page_screen/main_matches_page_screen.dart';
 import 'controller/profile_changing_page_controller.dart';
 import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 
-class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController> {
+import 'models/profile_changing_page_model.dart';
 
-  var profileHeight = 300;
-  final aboutYouController = TextEditingController();
+
+class ProfileChangingPage extends StatefulWidget{
+  final String email;
+  ProfileChangingPage(this.email);
 
   @override
-  Widget build(BuildContext context) {
+  _ProfileChangingPageState createState() => _ProfileChangingPageState();
+}
+
+//What to show if the user has already some profile set up previously and they
+//want to edit based on their previous profile
+class _ProfileChangingPageState extends State<ProfileChangingPage> {
+
+  Future<InitialProfileModel>? choices;
+  late List<String> hobbies;
+  late List<String> lookingFor;
+  List<int>? initialHobbies;
+  List<int>? initialLookingFor;
+  List<int>? chosenHobbies;
+  List<int>? chosenLookingFor;
+  var aboutYou;
+  var profilePic;
+  var hobbiesEmpty;
+  var lookingForEmpty;
+  final aboutYouController = TextEditingController();
+  // final imagePicker = ImagePicker();
+
+
+
+  @override
+  void initState(){
+    super.initState();
+    choices = getChoices();
+  }
+
+  Future<InitialProfileModel> getChoices() async{
+    InitialProfileModel initialProfile = await APIService().getChoices(widget.email);
+    print(initialProfile.toString());
+    return initialProfile;
+
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      body: FutureBuilder(
+        future: choices,
+        builder: (BuildContext context, AsyncSnapshot<InitialProfileModel> snapshot){
+          if (snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator());
+          }  else if (snapshot.hasError) {
+            print("profile changing page something went wrong");
+            return Center(child: Text('Something Went Wrong!'));
+          } else if (snapshot.hasData){
+              hobbies = snapshot.data!.hobbies!;
+              lookingFor = snapshot.data!.lookingFor!;
+              initialHobbies = snapshot.data!.chosenHobbies;
+              initialLookingFor = snapshot.data!.chosenLookingFor;
+              aboutYou = snapshot.data!.aboutYou;
+              // chosenHobbies == null ? hobbiesEmpty = true : hobbiesEmpty = false;
+              // chosenLookingFor == null ? lookingForEmpty = true : lookingForEmpty = false;
+              hobbiesEmpty = false;
+              lookingForEmpty = false;
+              profilePic = "nothing";
+              // profilePic = snapshot.data!.profilePic;
+            return buildProfileChangingPage();
+          }
+          print("ERROR: No data for choices in profileChangingPage");
+          return ProfileChangingPage(widget.email);
+        },
+      )
+    );
+  }
+
+
+
+
+  buildProfileChangingPage() {
     return Scaffold(
       backgroundColor: ColorConstant.deepOrange50,
       appBar: AppBar(
@@ -34,7 +111,7 @@ class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController>
 
                         selectLookingFor(),
 
-                        aboutYou(),
+                        aboutYouText(),
 
                       ],
                     ),
@@ -52,24 +129,66 @@ class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController>
 
 
   Widget buildProfilePic() {
-    return Container(
+    return
+      Container(
       margin:EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 20),
-      child: CircleAvatar(
-        radius: 50,
-        // backgroundImage: AssetImage(ImageConstant.defaultProfilePic),
-        backgroundColor: ColorConstant.deepOrange300,
-      ),
+      child: GestureDetector(
+        onTap: (){
+          showPickOptions(context);
+        },
+          child: CircleAvatar(
+            radius: 50,
+            backgroundImage: AssetImage(ImageConstant.defaultProfilePic),
+            // backgroundColor: ColorConstant.deepOrange300,
+          ),
+      )
+    );
+  }
+
+  // loadPicker(ImageSource source) async{
+  //   final XFile? picked = await imagePicker.pickImage(source: source);
+  //   if (picked != null){
+  //     setState(()=> profilePic = picked);
+  //   }
+  // }
+  //
+  void showPickOptions(BuildContext context){
+    showDialog(context: context,
+        builder: (context) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children:<Widget>[
+              ListTile(
+                title: Text("Pick From Gallery"),
+                onTap: (){
+                  // loadPicker(ImageSource.gallery);
+                }
+              ),
+              ListTile(
+                  title: Text("Take A Picture"),
+                  onTap: (){
+                    // loadPicker(ImageSource.camera);
+                  }
+              ),
+            ]
+          )
+
+        )
     );
   }
 
   Widget selectHobbies(){
     return Container(
       child: GFMultiSelect(
+        initialSelectedItemsIndex: initialHobbies != null ? initialHobbies : null,
+
         // should we get items from backend
-        items: ['Hiking', 'Sports', 'Study','...'],
+        items: hobbies,
         onSelect: (value){
+          setState(()=> chosenHobbies = value.cast<int>());
           print('select $value');
         },
+
 
         //dropdown Title
         dropdownTitleTileHintText: 'Select Your Hobbies',
@@ -77,7 +196,7 @@ class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController>
         dropdownTitleTileColor: ColorConstant.deepOrange50,
         dropdownTitleTileMargin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         dropdownTitleTilePadding: EdgeInsets.all(10),
-        dropdownTitleTileText: "",
+        dropdownTitleTileText: hobbiesEmpty ? "Hobbies Cannot Be Empty(need to change color)" : "",
         dropdownTitleTileTextStyle: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
 
 
@@ -111,9 +230,12 @@ class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController>
   Widget selectLookingFor(){
     return Container(
       child: GFMultiSelect(
+        initialSelectedItemsIndex: initialLookingFor,
+
         // should we get items from backend
-        items: ['Study Partner', 'Friends', '...'],
+        items: lookingFor,
         onSelect: (value){
+          setState(()=> chosenLookingFor = value.cast<int>());
           print('select $value');
         },
 
@@ -123,7 +245,7 @@ class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController>
         dropdownTitleTileColor: ColorConstant.deepOrange50,
         dropdownTitleTileMargin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         dropdownTitleTilePadding: EdgeInsets.all(10),
-        dropdownTitleTileText: "",
+        dropdownTitleTileText: lookingForEmpty ? "LookingFor Cannot Be Empty" : "",
         dropdownTitleTileTextStyle: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
         // hideDropdownUnderline: true,
 
@@ -178,15 +300,21 @@ class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController>
     );
   }
 
-  Widget aboutYou(){
+  Widget aboutYouText(){
     return Container(
-      margin: EdgeInsets.only(top: 30, left: 10, right: 10),
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+      margin: EdgeInsets.only(top: 20, left: 10, right: 10),
       child: Column(
         children:[
-          Text("About You", style: AppStyle
-              .textstyleinterregular20
-              .copyWith(fontSize:getFontSize(15), color: ColorConstant.deepOrange300),),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text("About You", style: AppStyle
+                .textstyleinterregular20
+                .copyWith(fontSize:getFontSize(15), color: ColorConstant.deepOrange300),textAlign: TextAlign.left),
+          ),
+          // Text("About You", style: AppStyle
+          //     .textstyleinterregular20
+          //     .copyWith(fontSize:getFontSize(15), color: ColorConstant.deepOrange300),textAlign: TextAlign.left),
           TextField(
           controller: aboutYouController,
           keyboardType: TextInputType.multiline,
@@ -206,206 +334,22 @@ class ProfileChangingPageScreen extends GetWidget<ProfileChangingPageController>
   }
 
   //Need to be connected with backend
-  onTapTxtNext(){
-    Get.toNamed(AppRoutes.mainMatchesPageScreen);
+  onTapTxtNext() async{
+    if (chosenHobbies == null  || chosenLookingFor == null){
+      setState((){
+        chosenHobbies == null ? hobbiesEmpty = true : hobbiesEmpty = false;
+        chosenLookingFor == null ? lookingForEmpty = true : lookingForEmpty = false;
+      });
+      buildProfileChangingPage();
+    } else {
+      final aboutYou = aboutYouController.text;
+      final newProfile = UpdatedProfileModel(email: widget.email,
+          chosenHobbies: chosenHobbies!, chosenLookingFor: chosenLookingFor!,
+          aboutYou: aboutYou, profilePic: profilePic);
+      await APIService().updateProfileInfo(newProfile);
+      // Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainMatchesPageScreen(widget.email)));
+    }
   }
 }
-
-
-
-
-    // return SafeArea(
-    //     child: Scaffold(
-    //         backgroundColor: ColorConstant.deepOrange50,
-    //         body: Container(
-    //             width: size.width,
-    //             child: SingleChildScrollView(
-    //                 child: Container(
-    //                     child: Column(
-                            // mainAxisSize: MainAxisSize.min,
-                            // mainAxisAlignment: MainAxisAlignment.start,
-                            // children: <Widget>[
-                            //   // header
-                            //   Container(
-                            //     padding: EdgeInsets.all(8.0),
-                            //     color: ColorConstant.deepOrange300,
-                            //     child: Text("Edit Profile",
-                            //         overflow:
-                            //         TextOverflow.ellipsis,
-                            //         textAlign: TextAlign.left,
-                            //         style: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15))
-                            //     ),
-                            //   ),
-
-
-
-
-                              //
-                              // Align(
-                              //     alignment: Alignment.center,
-                              //     child: Container(
-                              //         width: getHorizontalSize(220.00),
-                              //         margin: EdgeInsets.only(
-                              //             left: getHorizontalSize(17.00),
-                              //             top: getVerticalSize(18.00),
-                              //             right: getHorizontalSize(17.00)),
-                              //         decoration: BoxDecoration(
-                              //             color: ColorConstant.deepOrange50,
-                              //             borderRadius: BorderRadius.circular(
-                              //                 getHorizontalSize(2.00)),
-                              //             border: Border.all(
-                              //                 color: ColorConstant.bluegray400,
-                              //                 width: getHorizontalSize(1.00))),
-                              //         child: Column(
-                              //             mainAxisSize: MainAxisSize.min,
-                              //             crossAxisAlignment:
-                              //                 CrossAxisAlignment.center,
-                              //             mainAxisAlignment:
-                              //                 MainAxisAlignment.start,
-                              //             children: [
-                              //               Padding(
-                              //                   padding: EdgeInsets.only(
-                              //                       left: getHorizontalSize(
-                              //                           10.00),
-                              //                       top: getVerticalSize(42.00),
-                              //                       right: getHorizontalSize(
-                              //                           10.00),
-                              //                       bottom:
-                              //                           getVerticalSize(90.00)),
-                              //                   child: Text(
-                              //                       "lbl_profile_picture".tr,
-                              //                       overflow:
-                              //                           TextOverflow.ellipsis,
-                              //                       textAlign: TextAlign.left,
-                              //                       style: AppStyle
-                              //                           .textstyleinterregular151
-                              //                           .copyWith(
-                              //                               fontSize:
-                              //                                   getFontSize(
-                              //                                       15))))
-                              //             ]))),
-                              // Align(
-                              //     alignment: Alignment.centerLeft,
-                              //     child: Padding(
-                              //         padding: EdgeInsets.only(
-                              //             left: getHorizontalSize(17.00),
-                              //             top: getVerticalSize(32.00),
-                              //             right: getHorizontalSize(17.00)),
-                              //         child: Text("lbl_hobbies".tr,
-                              //             overflow: TextOverflow.ellipsis,
-                              //             textAlign: TextAlign.left,
-                              //             style: AppStyle
-                              //                 .textstyleinterregular152
-                              //                 .copyWith(
-                              //                     fontSize: getFontSize(15))))),
-                              // Align(
-                              //     alignment: Alignment.center,
-                              //     child: Container(
-                              //         height: getVerticalSize(28.00),
-                              //         width: getHorizontalSize(327.00),
-                              //         margin: EdgeInsets.only(
-                              //             left: getHorizontalSize(17.00),
-                              //             right: getHorizontalSize(16.00)),
-                              //         decoration: BoxDecoration(
-                              //             color: ColorConstant.deepOrange50,
-                              //             borderRadius: BorderRadius.circular(
-                              //                 getHorizontalSize(2.00)),
-                              //             border: Border.all(
-                              //                 color: ColorConstant.bluegray400,
-                              //                 width:
-                              //                     getHorizontalSize(1.00))))),
-                              // Align(
-                              //     alignment: Alignment.centerLeft,
-                              //     child: Padding(
-                              //         padding: EdgeInsets.only(
-                              //             left: getHorizontalSize(17.00),
-                              //             top: getVerticalSize(32.00),
-                              //             right: getHorizontalSize(17.00)),
-                              //         child: Text("lbl_looking_for".tr,
-                              //             overflow: TextOverflow.ellipsis,
-                              //             textAlign: TextAlign.left,
-                              //             style: AppStyle
-                              //                 .textstyleinterregular152
-                              //                 .copyWith(
-                              //                     fontSize: getFontSize(15))))),
-                              // Align(
-                              //     alignment: Alignment.centerLeft,
-                              //     child: Container(
-                              //         height: getVerticalSize(28.00),
-                              //         width: getHorizontalSize(199.00),
-                              //         margin: EdgeInsets.only(
-                              //             left: getHorizontalSize(17.00),
-                              //             right: getHorizontalSize(17.00)),
-                              //         decoration: BoxDecoration(
-                              //             color: ColorConstant.deepOrange50,
-                              //             borderRadius: BorderRadius.circular(
-                              //                 getHorizontalSize(2.00)),
-                              //             border: Border.all(
-                              //                 color: ColorConstant.bluegray400,
-                              //                 width:
-                              //                     getHorizontalSize(1.00))))),
-                              // Align(
-                              //     alignment: Alignment.centerLeft,
-                              //     child: Padding(
-                              //         padding: EdgeInsets.only(
-                              //             left: getHorizontalSize(17.00),
-                              //             top: getVerticalSize(32.00),
-                              //             right: getHorizontalSize(17.00)),
-                              //         child: Text("lbl_about_you".tr,
-                              //             overflow: TextOverflow.ellipsis,
-                              //             textAlign: TextAlign.left,
-                              //             style: AppStyle
-                              //                 .textstyleinterregular152
-                              //                 .copyWith(
-                              //                     fontSize: getFontSize(15))))),
-                              // Align(
-                              //     alignment: Alignment.center,
-                              //     child: Container(
-                              //         height: getVerticalSize(80.00),
-                              //         width: getHorizontalSize(325.00),
-                              //         margin: EdgeInsets.only(
-                              //             left: getHorizontalSize(17.00),
-                              //             right: getHorizontalSize(17.00)),
-                              //         decoration: BoxDecoration(
-                              //             color: ColorConstant.deepOrange50,
-                              //             borderRadius: BorderRadius.circular(
-                              //                 getHorizontalSize(2.00)),
-                              //             border: Border.all(
-                              //                 color: ColorConstant.bluegray400,
-                              //                 width:
-                              //                     getHorizontalSize(1.00))))),
-                              // Align(
-                              //     alignment: Alignment.centerRight,
-                              //     child: GestureDetector(
-                              //         onTap: () {
-                              //           onTapTxtSave();
-                              //         },
-                              //         child: Padding(
-                              //             padding: EdgeInsets.only(
-                              //                 left: getHorizontalSize(28.00),
-                              //                 top: getVerticalSize(221.00),
-                              //                 right: getHorizontalSize(28.00)),
-                              //             child: Text("lbl_save".tr,
-                              //                 overflow: TextOverflow.ellipsis,
-                              //                 textAlign: TextAlign.left,
-                              //                 style: AppStyle
-                              //                     .textstyleinterregular20
-                              //                     .copyWith(
-                              //                         fontSize:
-                              //                             getFontSize(20)))))),
-                              // Align(
-                              //     alignment: Alignment.centerLeft,
-                              //     child: Container(
-                              //         height: getVerticalSize(50.00),
-                              //         width: size.width,
-                              //         margin: EdgeInsets.only(
-                              //             top: getVerticalSize(1.00)),
-                              //         decoration: BoxDecoration(
-                              //             color: ColorConstant.lightBlueA100)))
-                            // ]))))));
-  // }
-//
-//   onTapTxtSave() {
-//     Get.toNamed(AppRoutes.mainMatchesPageScreen);
-//   }
-// }

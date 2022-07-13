@@ -45,11 +45,11 @@ class _LoginPageState extends State<LoginPage> {
           } else if (snapshot.hasData){
             print("hasData: " + snapshot.data.toString());
             if (snapshot.data == "Signup Mandatory"){
-              return MandatoryInfoPageScreen();
+              return MandatoryInfoPage(FirebaseAuth.instance.currentUser!.email!);
             } else if (snapshot.data == "Edit Profile"){
-              return ProfileChangingPageScreen();
+              return ProfileChangingPage(FirebaseAuth.instance.currentUser!.email!);
             } else if (snapshot.data == "Match Page"){
-              return MainMatchesPageScreen();
+              return MainMatchesPageScreen(FirebaseAuth.instance.currentUser!.email!);
             }
             return buildLoginPage();
           } else {
@@ -59,38 +59,6 @@ class _LoginPageState extends State<LoginPage> {
       )
     );
   }
-
-  //
-  // Widget build(BuildContext context) => Scaffold(
-  //     // body: showWidget()
-  //   body: StreamBuilder(
-  //     stream: FirebaseAuth.instance.authStateChanges(),
-  //     builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-  //       //return buildLoginPage();
-  //       if (snapshot.connectionState == ConnectionState.waiting){
-  //         return Center(child: CircularProgressIndicator());
-  //       }  else if (snapshot.hasError){
-  //         return Center(child: Text('Something Went Wrong!'));
-  //       } else if (snapshot.hasData) {
-  //         String pageToGo = getPageToGo().toString();
-  //         snapshot.
-  //         print("pagetogoo" + pageToGo);
-  //         if (pageToGo == "Signup Mandatory"){
-  //           return MandatoryInfoPageScreen();
-  //         } else if (pageToGo == "Edit Profile"){
-  //           return ProfileChangingPageScreen();
-  //         } else if (pageToGo == "Match Page"){
-  //           return MainMatchesPageScreen();
-  //         }
-  //         return buildLoginPage();
-
-  //       } else{
-  //         return buildLoginPage();
-  //       }
-  //     },
-  //   )
-  // );
-
   Future<String> getPageToGo() async{
     if (FirebaseAuth.instance.currentUser == null){
       return "Login Page";
@@ -359,11 +327,14 @@ class _LoginPageState extends State<LoginPage> {
     LoginResponseModel response = await APIService().login(UserModel(email: user?.email));
       print("response: " + response.pageToGo.toString());
       if (response.pageToGo.toString() == "Match Page"){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MainMatchesPageScreen()));
+        // Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments:user!.email!);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainMatchesPageScreen(user!.email!)));
       } else if (response.pageToGo.toString() == "Edit Profile"){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileChangingPageScreen()));
+        // Get.toNamed(AppRoutes.profileChangingPageScreen, arguments:user!.email!);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileChangingPage(user!.email!)));
       }else if (response.pageToGo.toString() == "Signup Mandatory"){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MandatoryInfoPageScreen()));
+        Get.toNamed(AppRoutes.mandatoryInfoPageScreen, arguments:user!.email!);
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => MandatoryInfoPage(user!.email!)));
       }
 
   }
