@@ -368,26 +368,32 @@ class MainMatchesPageScreen extends GetWidget<MainMatchesPageController> {
   }
 
   onTapEllipse1() {
+    print("mainMatchPage email: " + email);
     Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapGroup10() {
+    print("mainMatchPage email: " + email);
     Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapGroup9() {
+    print("mainMatchPage email: " + email);
     Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapGroup8() {
+    print("mainMatchPage email: " + email);
     Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: email);
   }
 
   onTapImgGroup1() {
+    print("mainMatchPage email: " + email);
     Get.toNamed(AppRoutes.allChatsScreen);
   }
 
   onTapImgImage6() {
+    print("mainMatchPage email: " + email);
     Get.toNamed(AppRoutes.personalProfileScreen, arguments: email);
   }
 }
