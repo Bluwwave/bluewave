@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:bluewave/data/api/api_client.dart';
+import 'package:flutter/services.dart';
 import 'package:getwidget/getwidget.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import '../main_matches_page_screen/main_matches_page_screen.dart';
 import 'controller/profile_changing_page_controller.dart';
 import 'package:bluewave/core/app_export.dart';
@@ -29,24 +32,28 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
   List<int>? initialLookingFor;
   List<int>? chosenHobbies;
   List<int>? chosenLookingFor;
-  var aboutYou;
-  var profilePic;
+  String? aboutYou;
+  Image? profilePic;
+  String? profilePicSource;
   var hobbiesEmpty;
   var lookingForEmpty;
   final aboutYouController = TextEditingController();
-  // final imagePicker = ImagePicker();
+  final imagePicker = ImagePicker();
+  final imageCropper = ImageCropper();
 
 
 
   @override
   void initState(){
     super.initState();
+    print("initial state");
     choices = getChoices();
   }
 
   Future<InitialProfileModel> getChoices() async{
+    print("getChoices");
     InitialProfileModel initialProfile = await APIService().getChoices(widget.email);
-    print(initialProfile.toString());
+    print("initialProfile finished");
     return initialProfile;
 
   }
@@ -70,10 +77,13 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
               aboutYou = snapshot.data!.aboutYou;
               // chosenHobbies == null ? hobbiesEmpty = true : hobbiesEmpty = false;
               // chosenLookingFor == null ? lookingForEmpty = true : lookingForEmpty = false;
-              hobbiesEmpty = false;
-              lookingForEmpty = false;
-              profilePic = "nothing";
-              // profilePic = snapshot.data!.profilePic;
+              // hobbiesEmpty = false;
+              // lookingForEmpty = false;
+              // print("before" + profilePicSource.toString());
+              profilePicSource == null ? profilePicSource = snapshot.data!.profilePic: null;
+              // print("after" + profilePicSource.toString());
+              profilePicSource != null ? profilePic = imageDecode(profilePicSource!): profilePic = null;
+              print("hobbies: " + hobbies.toString() + ", lookingfor: " + lookingFor.toString() + ", aboutYou: " + aboutYou.toString());
             return buildProfileChangingPage();
           }
           print("ERROR: No data for choices in profileChangingPage");
@@ -82,8 +92,6 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
       )
     );
   }
-
-
 
 
   buildProfileChangingPage() {
@@ -136,22 +144,50 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
         onTap: (){
           showPickOptions(context);
         },
-          child: CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage(ImageConstant.defaultProfilePic),
-            // backgroundColor: ColorConstant.deepOrange300,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+            CircleAvatar(
+              radius: 50,
+              backgroundImage:
+              profilePic != null ? profilePic!.image : null,
+              // AssetImage(ImageConstant.defaultProfilePic),
+              backgroundColor: profilePic == null ? ColorConstant.deepOrange300 : null,
+            ),
+          ]
+        )
       )
     );
   }
 
-  // loadPicker(ImageSource source) async{
-  //   final XFile? picked = await imagePicker.pickImage(source: source);
-  //   if (picked != null){
-  //     setState(()=> profilePic = picked);
-  //   }
-  // }
-  //
+  loadPicker(ImageSource source) async{
+    try {
+      final XFile? picked = await imagePicker.pickImage(source: source);
+      if (picked != null) {
+        cropImage(File(picked.path));
+        // setState(() {
+        //   profilePicSource = imageEncode(File(picked.path));
+        // });
+        // print("loadPicker:" + profilePicSource.toString());
+      }
+      Navigator.pop(context);
+    } on PlatformException catch(e){
+      print('Failed to pick image! $e');
+    }
+  }
+
+  cropImage(File picked) async{
+    CroppedFile? cropped = await imageCropper.cropImage(sourcePath: picked.path,
+    aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0));
+    if (cropped != null){
+      File croppedImage = File(cropped.path);
+      setState(() {
+        profilePicSource = imageEncode(croppedImage);
+      });
+    }
+  }
+
+
   void showPickOptions(BuildContext context){
     showDialog(context: context,
         builder: (context) => AlertDialog(
@@ -161,7 +197,8 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
               ListTile(
                 title: Text("Pick From Gallery"),
                 onTap: (){
-                  // loadPicker(ImageSource.gallery);
+                  print("choose from gallery");
+                  loadPicker(ImageSource.gallery);
                 }
               ),
               ListTile(
@@ -196,7 +233,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
         dropdownTitleTileColor: ColorConstant.deepOrange50,
         dropdownTitleTileMargin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         dropdownTitleTilePadding: EdgeInsets.all(10),
-        dropdownTitleTileText: hobbiesEmpty ? "Hobbies Cannot Be Empty(need to change color)" : "",
+        // dropdownTitleTileText: hobbiesEmpty ? "Hobbies Cannot Be Empty(need to change color)" : "",
         dropdownTitleTileTextStyle: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
 
 
@@ -245,7 +282,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
         dropdownTitleTileColor: ColorConstant.deepOrange50,
         dropdownTitleTileMargin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         dropdownTitleTilePadding: EdgeInsets.all(10),
-        dropdownTitleTileText: lookingForEmpty ? "LookingFor Cannot Be Empty" : "",
+        // dropdownTitleTileText: lookingForEmpty ? "LookingFor Cannot Be Empty" : "",
         dropdownTitleTileTextStyle: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
         // hideDropdownUnderline: true,
 
@@ -335,21 +372,35 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
 
   //Need to be connected with backend
   onTapTxtNext() async{
-    if (chosenHobbies == null  || chosenLookingFor == null){
-      setState((){
-        chosenHobbies == null ? hobbiesEmpty = true : hobbiesEmpty = false;
-        chosenLookingFor == null ? lookingForEmpty = true : lookingForEmpty = false;
-      });
-      buildProfileChangingPage();
-    } else {
-      final aboutYou = aboutYouController.text;
+    // Hobbies and LookingFor required feature:
+    //
+    // if (chosenHobbies == null  || chosenLookingFor == null){
+    //   setState((){
+    //     chosenHobbies == null ? hobbiesEmpty = true : hobbiesEmpty = false;
+    //     chosenLookingFor == null ? lookingForEmpty = true : lookingForEmpty = false;
+    //   });
+    //   buildProfileChangingPage();
+    // } else {
+      aboutYou = aboutYouController.text;
       final newProfile = UpdatedProfileModel(email: widget.email,
-          chosenHobbies: chosenHobbies!, chosenLookingFor: chosenLookingFor!,
-          aboutYou: aboutYou, profilePic: profilePic);
+          chosenHobbies: chosenHobbies, chosenLookingFor: chosenLookingFor,
+          aboutYou: aboutYou, profilePic: profilePicSource);
+      print(widget.email);
+      print(chosenHobbies);
+      print(chosenLookingFor);
+      print(aboutYou);
       await APIService().updateProfileInfo(newProfile);
-      // Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
+      Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
+  }
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainMatchesPageScreen(widget.email)));
-    }
+
+  imageEncode(File image){
+    final bytes = image.readAsBytesSync();
+    return base64Encode(bytes);
+  }
+
+  imageDecode(String imageSource){
+    final decodeBytes = base64Decode(imageSource);
+    return Image.memory(decodeBytes);
   }
 }

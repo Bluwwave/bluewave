@@ -70,7 +70,7 @@ class AppRoutes {
     ),
     GetPage(
       name: matchProfilePageScreen,
-      page: () => MatchProfilePageScreen(),
+      page: () => MatchProfilePageScreen(Get.arguments),
       bindings: [
         MatchProfilePageBinding(),
       ],
@@ -84,7 +84,7 @@ class AppRoutes {
     ),
     GetPage(
       name: allChatsScreen,
-      page: () => AllChatsScreen(),
+      page: () => AllChatsScreen(Get.arguments),
       bindings: [
         AllChatsBinding(),
       ],

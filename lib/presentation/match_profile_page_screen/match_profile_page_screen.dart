@@ -3,6 +3,9 @@ import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 class MatchProfilePageScreen extends GetWidget<MatchProfilePageController> {
+  String email;
+  MatchProfilePageScreen(this.email);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -230,18 +233,18 @@ class MatchProfilePageScreen extends GetWidget<MatchProfilePageController> {
   }
 
   onTapBtnChatwithname() {
-    Get.toNamed(AppRoutes.chatWithMatchScreen);
+    Get.toNamed(AppRoutes.chatWithMatchScreen, arguments: email);
   }
 
   onTapImgGroup3() {
-    Get.toNamed(AppRoutes.allChatsScreen);
+    Get.toNamed(AppRoutes.allChatsScreen, arguments: email);
   }
 
   onTapImgGroup4() {
-    Get.toNamed(AppRoutes.mainMatchesPageScreen);
+    Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: email);
   }
 
   onTapImgImage6() {
-    Get.toNamed(AppRoutes.personalProfileScreen);
+    Get.toNamed(AppRoutes.personalProfileScreen, arguments: email);
   }
 }

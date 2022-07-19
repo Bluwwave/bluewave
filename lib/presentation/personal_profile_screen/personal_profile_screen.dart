@@ -22,250 +22,190 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
     super.initState();
   }
 
+  // @override
+  // Widget build(BuildContext context){
+  //   return Scaffold(
+  //       body: FutureBuilder(
+  //       future: choices,
+  //       builder: (BuildContext context, AsyncSnapshot<InitialProfileModel> snapshot){
+  //         if (snapshot.connectionState == ConnectionState.waiting){
+  //           return Center(child: CircularProgressIndicator());
+  //         }  else if (snapshot.hasError) {
+  //           print("profile changing page something went wrong");
+  //           return Center(child: Text('Something Went Wrong!'));
+  //         } else if (snapshot.hasData){
+  //           return buildProfilePage();
+  //         }
+  //         print("ERROR: No data for choices in profileChangingPage");
+  //         return PersonalProfileScreen(widget.email);
+  //       },
+  //       )
+  //   );
+  // }
+
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: ColorConstant.whiteA700,
-            body: Column(children: [
-              Expanded(
-                  child: Container(
-                      width: size.width,
-                      child: SingleChildScrollView(
-                          child: Container(
-                              decoration:
-                                  BoxDecoration(color: ColorConstant.whiteA700),
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                      color: ColorConstant
-                                                          .deepOrange300),
-                                                  child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Align(
-                                                            alignment: Alignment
-                                                                .centerRight,
-                                                            child:
-                                                                GestureDetector(
-                                                                    onTap: () {
-                                                                      onTapTxtEditprofile();
-                                                                    },
-                                                                    child: Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                            left: getHorizontalSize(
-                                                                                15.00),
-                                                                            top: getVerticalSize(
-                                                                                16.00),
-                                                                            right: getHorizontalSize(
-                                                                                15.00),
-                                                                            bottom: getVerticalSize(
-                                                                                16.00)),
-                                                                        child: Text(
-                                                                            "lbl_edit_profile"
-                                                                                .tr,
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                            textAlign: TextAlign.left,
-                                                                            style: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15))))))
-                                                      ]))),
-                                          Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                          151.00),
-                                                      top: getVerticalSize(
-                                                          18.00),
-                                                      right: getHorizontalSize(
-                                                          151.00)),
-                                                  child: Text("lbl_name".tr,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: AppStyle
-                                                          .textstyleinterregular153
-                                                          .copyWith(
-                                                              fontSize:
-                                                                  getFontSize(
-                                                                      15))))),
-                                          Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Container(
-                                                  height: getSize(140.00),
-                                                  width: getSize(140.00),
-                                                  margin: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                          102.00),
-                                                      top: getVerticalSize(
-                                                          14.00),
-                                                      right: getHorizontalSize(
-                                                          102.00)),
-                                                  decoration: BoxDecoration(
-                                                      color: ColorConstant
-                                                          .bluegray100,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              getHorizontalSize(
-                                                                  70.00))))),
-                                          Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                          15.00),
-                                                      top: getVerticalSize(
-                                                          37.00),
-                                                      right: getHorizontalSize(
-                                                          15.00)),
-                                                  child: Text(
-                                                      "msg_my_match_prefer".tr,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: AppStyle
-                                                          .textstyleinterregular153
-                                                          .copyWith(
-                                                              fontSize:
-                                                                  getFontSize(
-                                                                      15))))),
-                                          Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: getHorizontalSize(
-                                                          15.00),
-                                                      top: getVerticalSize(
-                                                          36.00),
-                                                      right: getHorizontalSize(
-                                                          15.00)),
-                                                  child: Text(
-                                                      "msg_my_personal_inf".tr,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: AppStyle
-                                                          .textstyleinterregular153
-                                                          .copyWith(
-                                                              fontSize:
-                                                                  getFontSize(
-                                                                      15))))),
-                                          Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: GestureDetector(
-                                                  onTap: () {
-                                                    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-                                                    provider.logout().then((value){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));});
-                                                  },
-                                                  child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: getHorizontalSize(
-                                                              15.00),
-                                                          top: getVerticalSize(
-                                                              36.00),
-                                                          right: getHorizontalSize(
-                                                              15.00)),
-                                                      child: Text(
-                                                          "Log out".tr,
-                                                          overflow:
-                                                          TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.left,
-                                                          style: AppStyle
-                                                              .textstyleinterregular153
-                                                              .copyWith(
-                                                              fontSize:
-                                                              getFontSize(
-                                                                  15)))))
-                                          )
-                                        ])
-                                  ]))))),
-              Container(
-                  decoration: BoxDecoration(color: ColorConstant.lightBlueA100),
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          top: getVerticalSize(5.00),
-                          bottom: getVerticalSize(5.00)),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  onTapImgGroup2();
-                                },
-                                child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: getVerticalSize(1.00),
-                                        bottom: getVerticalSize(2.00)),
-                                    child: Image.asset(ImageConstant.imgGroup2,
-                                        height: getVerticalSize(37.00),
-                                        width: getHorizontalSize(36.00),
-                                        fit: BoxFit.fill))),
-                            GestureDetector(
-                                onTap: () {
-                                  onTapImgGroup5();
-                                },
-                                child: Image.asset(ImageConstant.imgGroup5,
-                                    height: getVerticalSize(40.00),
-                                    width: getHorizontalSize(56.50),
-                                    fit: BoxFit.fill)),
-                            ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    getHorizontalSize(20.00)),
-                                child: Image.asset(ImageConstant.imgImage64,
-                                    height: getSize(40.00),
-                                    width: getSize(40.00),
-                                    fit: BoxFit.fill))
-                          ])))
-            ])));
+  Widget build(BuildContext context){
+    return buildProfilePage();
   }
 
-  header(){
-    return Container(
-      padding: EdgeInsets.only(
-          left: getHorizontalSize(16.00),
-          top: getVerticalSize(13.00),
-          right: getHorizontalSize(16.00),
-          bottom: getVerticalSize(19.00)),
-      color: ColorConstant.deepOrange300,
-      child: Text("Sign Up",
-          overflow:
-          TextOverflow.ellipsis,
-          textAlign: TextAlign.left,
-          style: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15))
+  buildProfilePage() {
+    return Scaffold(
+      backgroundColor: ColorConstant.deepOrange50,
+      appBar: appBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+            child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    margin: EdgeInsets.only(top: 20, left: 20, right: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        userName(),
+
+                        profilePic(),
+
+                        editProfile(),
+
+                        logOut(),
+                      ],
+                    ),
+                  ),
+                ]
+            )
+        ),
+      ),
+
+      bottomNavigationBar: BottomAppBar(
+          child: myNavBar(),
       ),
     );
   }
 
-  onTapTxtEditprofile() {
-    Get.toNamed(AppRoutes.profileChangingPageScreen, arguments: widget.email);
+  appBar(){
+    return AppBar(
+      elevation: 0,
+      backgroundColor: ColorConstant.deepOrange300,
+      title: Text("My Profile",style: AppStyle.textstyleinterregular15.copyWith(
+          fontSize: getFontSize(15))),
+    );
   }
 
-  onTapImgGroup2() {
-    Get.toNamed(AppRoutes.allChatsScreen);
+
+  Widget userName(){
+    return Container(
+      child: Text(
+        "UserName",
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: AppStyle
+            .textstyleinterregular153
+            .copyWith(
+            fontSize:
+            getFontSize(20))
+      ),
+    );
   }
 
-  onTapImgGroup5() {
-    Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
+  Widget profilePic() {
+    return
+      Container(
+          margin:EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:[
+                CircleAvatar(
+                  radius: 50,
+                  // backgroundImage:
+                  // profilePic != null ? profilePic!.image : null,
+                  // backgroundColor: profilePic == null ? ColorConstant.deepOrange300 : null,
+                  backgroundColor: ColorConstant.deepOrange300,
+                ),
+              ]
+          )
+      );
+  }
+
+  Widget editProfile(){
+    return GestureDetector(
+      onTap:(){
+        Get.toNamed(AppRoutes.profileChangingPageScreen, arguments: widget.email);
+      },
+      child: Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: Text(
+            "Edit Profile",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.left,
+            style: AppStyle
+                .textstyleinterregular153
+                .copyWith(
+                fontSize:
+                getFontSize(15))
+        ),
+      ),
+    );
+  }
+
+  Widget logOut(){
+    return GestureDetector(
+      onTap:(){
+        final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+        provider.logout().then((value){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));});
+      },
+    child: Padding(
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      child: Text(
+        "Log Out",
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.left,
+        style: AppStyle
+            .textstyleinterregular153
+            .copyWith(
+            fontSize:
+            getFontSize(15))
+    ),
+    ),
+    );
+  }
+
+
+
+  Container myNavBar() {
+    return Container(
+      height: 50,
+      color: ColorConstant.lightBlueA100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          // All Chats icon
+          FloatingActionButton(
+            onPressed: (){
+              Get.toNamed(AppRoutes.allChatsScreen);
+            },
+            child: Icon(Icons.sms_outlined,color: ColorConstant.whiteA700,size: 30,),
+            backgroundColor: ColorConstant.lightBlueA100,
+            elevation: 0,
+          ),
+          // Match Page icon
+          FloatingActionButton(
+            onPressed: (){
+              Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
+            },
+            child: Icon(Icons.home_outlined,color: ColorConstant.whiteA700,size: 30,),
+            backgroundColor: ColorConstant.lightBlueA100,
+            elevation: 0,
+          ),
+          // Profile page icon
+          FloatingActionButton(
+            onPressed: (){},
+            child: Icon(Icons.person_outline,color: ColorConstant.whiteA700,size: 30,),
+            backgroundColor: ColorConstant.lightBlueA100,
+            elevation: 0,
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
         fallbackLocale: Locale('en', 'US'),
         title: 'bluewave',
         initialBinding: InitialBindings(),
-        // home: LoginPage(),
+        // home: ProfileChangingPage(),
         initialRoute: AppRoutes.loginPageScreen,
         //initialRoute: FirebaseAuth.instance.currentUser != null ?  AppRoutes.loginPageScreen: AppRoutes.mainMatchesPageScreen,
         getPages: AppRoutes.pages,

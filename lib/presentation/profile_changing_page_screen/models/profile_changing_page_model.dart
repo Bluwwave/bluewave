@@ -26,9 +26,16 @@ class InitialProfileModel{
   final List<int>? chosenHobbies;
   final List<int>? chosenLookingFor;
   final String? aboutYou;
+  final String? profilePic;
 
-  InitialProfileModel({required this.hobbies, required this.lookingFor,
-    this.chosenHobbies, this.chosenLookingFor, this.aboutYou});
+  InitialProfileModel({
+    required this.hobbies,
+    required this.lookingFor,
+    this.chosenHobbies,
+    this.chosenLookingFor,
+    this.aboutYou,
+    this.profilePic
+  });
 
   factory InitialProfileModel.fromJson(Map<String, dynamic> json) => InitialProfileModel(
       hobbies: json['hobbies_choices'] != null ? List.from(json['hobbies_choices']) : null,
@@ -36,31 +43,33 @@ class InitialProfileModel{
       chosenHobbies: json['hobbies'] != null ? List.from(json['hobbies']) : null,
       chosenLookingFor: json['looking_for'] != null ? List.from(json['looking_for']) : null,
       aboutYou: json['about_you'],
+      profilePic: json['profile_pic']
     );
 }
 
 class UpdatedProfileModel{
   final String email;
-  final List<int> chosenHobbies;
-  final List<int> chosenLookingFor;
-  final String aboutYou;
+  final List<int>? chosenHobbies;
+  final List<int>? chosenLookingFor;
+  final String? aboutYou;
   final String? profilePic;
 
-  UpdatedProfileModel({required this.email, required this.chosenHobbies,
-    required this.chosenLookingFor, required this.aboutYou, required this.profilePic});
+  UpdatedProfileModel({
+    required this.email,
+    required this.chosenHobbies,
+    required this.chosenLookingFor,
+    required this.aboutYou,
+    required this.profilePic
+  });
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> map = {
       'email': email,
-      'chosenHobbies': chosenHobbies,
-      'chosenLookingFor': chosenLookingFor,
-      'aboutYou': aboutYou,
-      'profilePic': profilePic,
+      'hobbies': chosenHobbies,
+      'looking_for': chosenLookingFor,
+      'about_you': aboutYou,
+      'profile_pic': profilePic,
     };
     return map;
   }
-
-
-
-
 }

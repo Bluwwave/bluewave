@@ -3,6 +3,10 @@ import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 class AllChatsScreen extends GetWidget<AllChatsController> {
+  String email;
+  AllChatsScreen(this.email);
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
