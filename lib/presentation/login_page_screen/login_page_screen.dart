@@ -45,10 +45,13 @@ class _LoginPageState extends State<LoginPage> {
           } else if (snapshot.hasData){
             print("hasData: " + snapshot.data.toString());
             if (snapshot.data == "Signup Mandatory"){
+              // Get.toNamed(AppRoutes.mandatoryInfoPageScreen, arguments: FirebaseAuth.instance.currentUser!.email!);
               return MandatoryInfoPage(FirebaseAuth.instance.currentUser!.email!);
             } else if (snapshot.data == "Edit Profile"){
+              // Get.toNamed(AppRoutes.profileChangingPageScreen, arguments: FirebaseAuth.instance.currentUser!.email!);
               return ProfileChangingPage(FirebaseAuth.instance.currentUser!.email!);
             } else if (snapshot.data == "Match Page"){
+              // Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: FirebaseAuth.instance.currentUser!.email!);
               return MainMatchesPageScreen(FirebaseAuth.instance.currentUser!.email!);
             }
             return buildLoginPage();
