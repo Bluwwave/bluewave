@@ -18,6 +18,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
   @override
   void initState(){
     super.initState();
+    print(widget.email);
   }
 
   @override

@@ -26,8 +26,8 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
   Future<PersonalProfileModel>? profile;
 
   late String name;
-  String? aboutYou;
-  String? profilePicSource;
+  // String? aboutYou;
+  // String? profilePicSource;
 
 
 
@@ -58,8 +58,8 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
             return Center(child: Text('Something Went Wrong!'));
           } else if (snapshot.hasData){
             name = snapshot.data!.name;
-            aboutYou = snapshot.data?.aboutYou;
-            profilePicSource = snapshot.data?.profilePic;
+            // aboutYou = snapshot.data?.aboutYou;
+            // profilePicSource = snapshot.data?.profilePic;
 
             return buildProfilePage();
           }

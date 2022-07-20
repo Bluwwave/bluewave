@@ -36,6 +36,7 @@ class APIService {
 
   Future<InitialProfileModel> getChoices(String? email) async{
     String getProfileUrl = url + "/get_profile";
+    print("get choices api calling");
     final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     final message = json.decode(response.body);
     print("get choices response: " + message.toString());

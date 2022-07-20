@@ -80,6 +80,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
               // hobbiesEmpty = false;
               // lookingForEmpty = false;
               // print("before" + profilePicSource.toString());
+              print("profile changing page screen about you:" + aboutYou.toString());
               profilePicSource == null ? profilePicSource = snapshot.data!.profilePic: null;
               // print("after" + profilePicSource.toString());
               profilePicSource != null ? profilePic = imageDecode(profilePicSource!): profilePic = null;
@@ -388,7 +389,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
       print(widget.email);
       print(chosenHobbies);
       print(chosenLookingFor);
-      print(aboutYou);
+      print("aboutYou: " + aboutYou.toString());
       await APIService().updateProfileInfo(newProfile);
       Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
   }
