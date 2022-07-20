@@ -138,6 +138,7 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
             provider.logout().then((value){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));});
           }
         },
+          color: ColorConstant.deepOrange50,
         ),
       ],
     );
