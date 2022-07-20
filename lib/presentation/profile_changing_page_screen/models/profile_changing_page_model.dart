@@ -37,15 +37,43 @@ class InitialProfileModel{
     this.profilePic
   });
 
-  factory InitialProfileModel.fromJson(Map<String, dynamic> json) => InitialProfileModel(
-      hobbies: json['hobbies_choices'] != null ? List.from(json['hobbies_choices']) : null,
-      lookingFor: json['looking_for_choices'] != null ? List.from(json['looking_for_choices']) : null,
-      chosenHobbies: json['hobbies'] != null ? List.from(json['hobbies']) : null,
-      chosenLookingFor: json['looking_for'] != null ? List.from(json['looking_for']) : null,
-      aboutYou: json['about_you'],
-      profilePic: json['profile_pic']
+  // factory InitialProfileModel.fromJson(Map<String, dynamic> json) => InitialProfileModel(
+  //     hobbies: json['hobbies_choices'] != null ? List<String>.from(json['hobbies_choices']) : [],
+  //     lookingFor: json['looking_for_choices'] != null ? List<String>.from(json['looking_for_choices']) : [],
+  //     chosenHobbies: json['hobbies'] != null ? List<int>.from(json['hobbies']) : [],
+  //     chosenLookingFor: json['looking_for'] != null ? List<int>.from(json['looking_for']) : [],
+  //     aboutYou: json['about_you'],
+  //     profilePic: json['profile_pic']
+  //   );
+
+
+  factory InitialProfileModel.fromJson(Map<String, dynamic> json) {
+    print("json" + json.toString());
+    List<String> testingHobbies;
+    json['hobbies_choices'] != null ? testingHobbies = List<String>.from(
+        json['hobbies_choices']) : testingHobbies = [];
+    print("testingHobbies" + testingHobbies.toString());
+    List<String> testingChosenHobbies;
+    print(json['hobbies']);
+    String testing = json['hobbies'];
+    print(testing);
+    print(List.from(json['hobbies']));
+    json['hobbies'] != null ? testingChosenHobbies = List<String>.from(json['hobbies']) : testingChosenHobbies = [];
+    print("testingChosenHobbies" + testingChosenHobbies.toString());
+
+    return InitialProfileModel(
+        hobbies: json['hobbies_choices'] != null ? List<String>.from(json['hobbies_choices']) : [],
+        lookingFor: json['looking_for_choices'] != null ? List<String>.from(json['looking_for_choices']) : [],
+        chosenHobbies: json['hobbies'] != null ? List<int>.from(json['hobbies']) : [],
+        chosenLookingFor: json['looking_for'] != null ? List<int>.from(json['looking_for']) : [],
+        aboutYou: json['about_you'],
+        profilePic: json['profile_pic']
     );
-}
+
+  }
+
+  }
+
 
 class UpdatedProfileModel{
   final String email;

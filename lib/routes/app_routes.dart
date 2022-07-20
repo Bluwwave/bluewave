@@ -92,9 +92,9 @@ class AppRoutes {
     GetPage(
       name: personalProfileScreen,
       page: () => PersonalProfileScreen(Get.arguments),
-      bindings: [
-        PersonalProfileBinding(),
-      ],
+      // bindings: [
+      //   PersonalProfileBinding(),
+      // ],
     ),
     GetPage(
       name: appNavigationScreen,

@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import '../../presentation/login_page_screen/models/login_page_model.dart';
 import '../../presentation/mandatory_info_page_screen/models/mandatory_info_page_model.dart';
+import '../../presentation/personal_profile_screen/models/personal_profile_model.dart';
 
 class APIService {
   final url = "https://bluewave.mlbrains.com";
@@ -37,15 +38,25 @@ class APIService {
     String getProfileUrl = url + "/get_profile";
     final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     final message = json.decode(response.body);
-    print("get choices response" + message.toString());
+    print("get choices response: " + message.toString());
+    print("hello");
+    print(InitialProfileModel.fromJson(message));
     InitialProfileModel initialProfile = InitialProfileModel.fromJson(message);
+    print("after");
     print(initialProfile.toString());
-    print(initialProfile.hobbies);
     return InitialProfileModel.fromJson(message);
   }
 
   Future<void> updateProfileInfo(UpdatedProfileModel updatedProfile) async{
     String updateProfileUrl = url + "/optional_signup";
     await http.post(Uri.parse(updateProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode(updatedProfile));
+  }
+
+  Future<PersonalProfileModel> getUserProfile(String? email) async{
+    String getProfileUrl = url + "/get_profile";
+    final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
+    final message = json.decode(response.body);
+    print(PersonalProfileModel.fromJson(message));
+    return PersonalProfileModel.fromJson(message);
   }
 }

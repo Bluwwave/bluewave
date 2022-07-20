@@ -83,11 +83,12 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
               profilePicSource == null ? profilePicSource = snapshot.data!.profilePic: null;
               // print("after" + profilePicSource.toString());
               profilePicSource != null ? profilePic = imageDecode(profilePicSource!): profilePic = null;
-              print("hobbies: " + hobbies.toString() + ", lookingfor: " + lookingFor.toString() + ", aboutYou: " + aboutYou.toString());
+              print("chosenHobbies: " + initialHobbies.toString() + ", chosenLookingfor: " + initialLookingFor.toString() + ", aboutYou: " + aboutYou.toString());
             return buildProfileChangingPage();
+          } else {
+            print("ERROR: No data for choices in profileChangingPage");
+            return ProfileChangingPage(widget.email);
           }
-          print("ERROR: No data for choices in profileChangingPage");
-          return ProfileChangingPage(widget.email);
         },
       )
     );
@@ -165,10 +166,10 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
       final XFile? picked = await imagePicker.pickImage(source: source);
       if (picked != null) {
         cropImage(File(picked.path));
-        // setState(() {
-        //   profilePicSource = imageEncode(File(picked.path));
-        // });
-        // print("loadPicker:" + profilePicSource.toString());
+        setState(() {
+          profilePicSource = imageEncode(File(picked.path));
+        });
+        print("loadPicker:" + profilePicSource.toString());
       }
       Navigator.pop(context);
     } on PlatformException catch(e){
@@ -225,7 +226,6 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
           setState(()=> chosenHobbies = value.cast<int>());
           print('select $value');
         },
-
 
         //dropdown Title
         dropdownTitleTileHintText: 'Select Your Hobbies',
