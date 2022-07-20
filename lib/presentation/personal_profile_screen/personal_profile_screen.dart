@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bluewave/data/api/api_client.dart';
 import 'package:bluewave/presentation/login_page_screen/login_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,8 +28,8 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
   Future<PersonalProfileModel>? profile;
 
   late String name;
-  // String? aboutYou;
-  // String? profilePicSource;
+  String? aboutYou;
+  Image? profilePicture;
 
 
 
@@ -58,9 +60,8 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
             return Center(child: Text('Something Went Wrong!'));
           } else if (snapshot.hasData){
             name = snapshot.data!.name;
-            // aboutYou = snapshot.data?.aboutYou;
-            // profilePicSource = snapshot.data?.profilePic;
-
+            aboutYou = snapshot.data!.aboutYou;
+            snapshot.data!.profilePic != null ? profilePicture = imageDecode(snapshot.data!.profilePic!): null;
             return buildProfilePage();
           }
           print("ERROR: No data for choices in profileChangingPage");
@@ -89,13 +90,13 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        userName(),
+                        // userName(),
 
                         profilePic(),
 
-                        // editProfile(),
+                        userName(),
 
-                        // logOut(),
+                        aboutYouText(),
                       ],
                     ),
                   ),
@@ -138,12 +139,6 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
           }
         },
         ),
-        // IconButton(
-        //     onPressed:(){
-        //       editProfile();
-        //     },
-        //     icon: Icon(Icons.settings)
-        // )
       ],
     );
   }
@@ -151,6 +146,7 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
 
   Widget userName(){
     return Container(
+      // margin:EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
       child: Text(
         name,
         overflow: TextOverflow.ellipsis,
@@ -167,69 +163,35 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
   Widget profilePic() {
     return
       Container(
-          margin:EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 20),
+          margin:EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 20),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children:[
                 CircleAvatar(
                   radius: 50,
-                  // backgroundImage:
-                  // profilePic != null ? profilePic!.image : null,
-                  // backgroundColor: profilePic == null ? ColorConstant.deepOrange300 : null,
-                  backgroundColor: ColorConstant.deepOrange300,
+                  backgroundImage:
+                  profilePicture != null ? profilePicture!.image : null,
+                  backgroundColor: profilePicture == null ? ColorConstant.deepOrange300 : null,
                 ),
               ]
           )
       );
   }
 
-  // editProfile(){
-    // return GestureDetector(
-    //   onTap:(){
-    //     Get.toNamed(AppRoutes.profileChangingPageScreen, arguments: widget.email);
-    //   },
-    //   child: Padding(
-    //     padding: EdgeInsets.only(top: 10, bottom: 10),
-    //     child: Text(
-    //         "Edit Profile",
-    //         overflow: TextOverflow.ellipsis,
-    //         textAlign: TextAlign.left,
-    //         style: AppStyle
-    //             .textstyleinterregular153
-    //             .copyWith(
-    //             fontSize:
-    //             getFontSize(15))
-    //     ),
-    //   ),
-    // );
-  // }
-
-  // logOut(){
-    // return  Align(
-    //   alignment: Alignment.bottomCenter,
-    //   child: GestureDetector(
-    //     onTap:(){
-    //       final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-    //       provider.logout().then((value){Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));});
-    //     },
-    //     child: Padding(
-    //       padding: EdgeInsets.only(top: 10, bottom: 10),
-    //       child: Text(
-    //           "Log Out",
-    //           overflow: TextOverflow.ellipsis,
-    //           textAlign: TextAlign.left,
-    //           style: AppStyle
-    //               .textstyleinterregular153
-    //               .copyWith(
-    //               fontSize:
-    //               getFontSize(15))
-    //       ),
-    //     ),
-    //   ),
-    // );
-  // }
-
-
+  Widget aboutYouText(){
+    if (aboutYou == null){
+      return new Container(width: 0, height: 0);
+    }
+    return Container(
+      alignment: Alignment.center,
+      margin:EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
+      child: Text(
+        aboutYou!,
+        style: AppStyle.textstyleinterregular15.copyWith(
+            fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
+      ),
+    );
+  }
 
   Container myNavBar() {
     return Container(
@@ -266,5 +228,11 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
         ],
       ),
     );
+  }
+
+  //convert image source(which is a String) to an Image.
+  imageDecode(String imageSource){
+    final decodeBytes = base64Decode(imageSource);
+    return Image.memory(decodeBytes);
   }
 }

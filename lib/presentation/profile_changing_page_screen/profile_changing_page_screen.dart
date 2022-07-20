@@ -74,7 +74,8 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
               lookingFor = snapshot.data!.lookingFor!;
               initialHobbies = snapshot.data!.chosenHobbies;
               initialLookingFor = snapshot.data!.chosenLookingFor;
-              aboutYou = snapshot.data!.aboutYou;
+              snapshot.data!.aboutYou != null ? aboutYouController.text = snapshot.data!.aboutYou! : null;
+              // aboutYouController.text = snapshot.data!.aboutYou;
               // chosenHobbies == null ? hobbiesEmpty = true : hobbiesEmpty = false;
               // chosenLookingFor == null ? lookingForEmpty = true : lookingForEmpty = false;
               // hobbiesEmpty = false;
@@ -394,12 +395,13 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
       Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
   }
 
-
+  //convert image File to base64 bytes
   imageEncode(File image){
     final bytes = image.readAsBytesSync();
     return base64Encode(bytes);
   }
 
+  //convert image source(which is a String) to image
   imageDecode(String imageSource){
     final decodeBytes = base64Decode(imageSource);
     return Image.memory(decodeBytes);
