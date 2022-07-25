@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bluewave/data/api/api_client.dart';
 import 'package:bluewave/presentation/login_page_screen/login_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:provider/provider.dart';
 
 import '../login_page_screen/provider/google_provider.dart';
@@ -30,6 +31,7 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
   late String name;
   String? aboutYou;
   Image? profilePicture;
+  late List<String> hobbies;
 
 
 
@@ -62,6 +64,9 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
             name = snapshot.data!.name;
             aboutYou = snapshot.data!.aboutYou;
             snapshot.data!.profilePic != null ? profilePicture = imageDecode(snapshot.data!.profilePic!): null;
+            getHobbies(snapshot.data!);
+            print("personal profile page hobbies: " + hobbies.toString());
+            print(snapshot.data?.chosenHobbies);
             return buildProfilePage();
           }
           print("ERROR: No data for choices in profileChangingPage");
@@ -69,6 +74,15 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
         },
         )
     );
+  }
+
+  getHobbies(PersonalProfileModel user){
+    hobbies = [];
+    List<String> hobbiesChoices = user.hobbiesChoices!;
+    List<int> chosenHobbies = user.chosenHobbies!;
+    for (int index in chosenHobbies){
+      hobbies.add(hobbiesChoices[index]);
+    }
   }
 
   // @override
@@ -97,6 +111,8 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
                         userName(),
 
                         aboutYouText(),
+
+                        hobbyTags(),
                       ],
                     ),
                   ),
@@ -191,6 +207,26 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
         style: AppStyle.textstyleinterregular15.copyWith(
             fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
       ),
+    );
+  }
+
+
+  Widget hobbyTags(){
+    if (hobbies.length == 0){
+      return new Container(width: 0, height: 0);
+    }
+    return Tags(
+      itemCount: hobbies.length,
+      itemBuilder: (index){
+        final item = hobbies[index];
+        return ItemTags(
+            key: Key(index.toString()),
+            index: index,
+            title: item,
+            activeColor: ColorConstant.deepOrange300,
+            pressEnabled: false,
+        );
+      },
     );
   }
 

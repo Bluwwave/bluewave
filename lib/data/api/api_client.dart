@@ -1,8 +1,10 @@
 import 'package:bluewave/core/app_export.dart';
+import 'package:bluewave/presentation/main_matches_page_screen/models/main_matches_page_model.dart';
 import 'package:bluewave/presentation/profile_changing_page_screen/models/profile_changing_page_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../presentation/all_chats_screen/models/all_chats_model.dart';
 import '../../presentation/login_page_screen/models/login_page_model.dart';
 import '../../presentation/mandatory_info_page_screen/models/mandatory_info_page_model.dart';
 import '../../presentation/personal_profile_screen/models/personal_profile_model.dart';
@@ -60,4 +62,41 @@ class APIService {
     print(PersonalProfileModel.fromJson(message));
     return PersonalProfileModel.fromJson(message);
   }
+
+  // Future<List<MatchModel>> getMatches(String email) async{
+  //   String getMatchesUrl = url + "/matching";
+  //   final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
+  //   final message = json.decode(response.body);
+  //   print(message);
+  //   return List<MatchModel>.fromJson(message);
+  //
+  // }
+
+
+  // Get list of users that current user can chat with from backend
+  // the response should contain names of user, imageUrl, timestamp, content of most recent message, isMessageRead
+  Future<AllChatsModel> getRecentChats(MandatoryInfoModel user) async{
+    String infoUrl = url + "/get_recent_chats";
+    final response = await http.post(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email}));
+    return AllChatsModel.fromJson(json.decode(response.body));
+  }
+
+/*
+  // Get list of all chats from current user with person user is chatting with now
+  // response contains name of user sending message, message content, image url, timestamp, is MessageRead (always true)
+  // This tap should change isMessageRead to True
+  Future<AllChatsModel> getPastChats(MandatoryInfoModel user) async{
+    String infoUrl = url + "/get_past_chats";
+    final response = await http.post(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email}));
+    return AllChatsModel.fromJson(json.decode(response.body));
+  }
+
+  // On send - when user is chatting with match
+  // send user email of user, message content, timestamp
+  // do not need to catch response
+  Future<void> storeChats(MandatoryInfoModel user) async{
+    String infoUrl = url + "/store_chats";
+    await http.post(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email}));
+  }
+*/
 }
