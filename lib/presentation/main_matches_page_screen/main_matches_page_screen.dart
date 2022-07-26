@@ -1,9 +1,12 @@
 
+import 'package:bluewave/data/api/api_client.dart';
 import 'package:bluewave/presentation/match_profile_page_screen/match_profile_page_screen.dart';
 
 import 'controller/main_matches_page_controller.dart';
 import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
+
+import 'models/main_matches_page_model.dart';
 
 class MainMatchesPageScreen extends StatefulWidget {
   String email;
@@ -15,14 +18,49 @@ class MainMatchesPageScreen extends StatefulWidget {
 
 class _MainMatchesPageState extends State<MainMatchesPageScreen>{
 
+  late Future<MainMatchPageModel> matchesInfo;
+
+  late List<MatchModel> matches;
+
+
+
+
   @override
   void initState(){
     super.initState();
     print(widget.email);
+    matchesInfo = getMatchesInfo();
+  }
+
+  Future<MainMatchPageModel> getMatchesInfo() async{
+    MainMatchPageModel matchesInfoData =  await APIService().getMatches(widget.email);
+    print(matchesInfoData);
+    return matchesInfoData;
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: matchesInfo,
+        builder: (BuildContext context, AsyncSnapshot<MainMatchPageModel> snapshot){
+          if (snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator());
+          }  else if (snapshot.hasError) {
+            print("MainMatchPage something went wrong");
+            return Center(child: Text('Something Went Wrong!'));
+          } else if (snapshot.hasData){
+            matches = snapshot.data!.matches!;
+            print("main match page build matches: " + matches.toString());
+            return buildMainMatchesPage();
+          }
+          print("ERROR: No data for choices in profileChangingPage");
+          return MainMatchesPageScreen(widget.email);
+        },
+      ),
+    );
+
+
     return buildMainMatchesPage();
   }
 

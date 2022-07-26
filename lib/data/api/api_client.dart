@@ -63,14 +63,18 @@ class APIService {
     return PersonalProfileModel.fromJson(message);
   }
 
-  // Future<List<MatchModel>> getMatches(String email) async{
-  //   String getMatchesUrl = url + "/matching";
-  //   final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
-  //   final message = json.decode(response.body);
-  //   print(message);
-  //   return List<MatchModel>.fromJson(message);
-  //
-  // }
+  Future<MainMatchPageModel> getMatches(String email) async{
+    String getMatchesUrl = url + "/matching";
+    print("before http request");
+    final response = await http.post(Uri.parse(getMatchesUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
+    print("after http request");
+    print(response.body);
+    final message = json.decode(response.body);
+    print("get matches api");
+    print(message);
+    return MainMatchPageModel.fromJson(message);
+
+  }
 
 
   // Get list of users that current user can chat with from backend

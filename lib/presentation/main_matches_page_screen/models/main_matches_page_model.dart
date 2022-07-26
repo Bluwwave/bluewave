@@ -16,13 +16,11 @@ class MatchModel {
 }
 
 class MainMatchPageModel {
-  MatchModel matchForToday;
   List<MatchModel>? matches;
 
-  MainMatchPageModel({required this.matchForToday, this.matches});
+  MainMatchPageModel({ this.matches});
 
   factory MainMatchPageModel.fromJson(Map<String, dynamic> json) => MainMatchPageModel(
-    matchForToday: MatchModel.fromJson(json['match']),
     matches: json['matches'] != null ? List<MatchModel>.from(json['hobbies_choices']) : [],
   );
 }
