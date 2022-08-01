@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:bluewave/data/api/api_client.dart';
 import 'package:bluewave/presentation/match_profile_page_screen/match_profile_page_screen.dart';
 
@@ -20,7 +22,9 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
 
   late Future<MainMatchPageModel> matchesInfo;
 
-  late List<MatchModel> matches;
+  late List<MatchModel> matches; //past matches
+  late MatchModel match; //today's match
+  Image? matchProfilePic; //today's match's profile pic
 
 
 
@@ -50,8 +54,9 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
             print("MainMatchPage something went wrong");
             return Center(child: Text('Something Went Wrong!'));
           } else if (snapshot.hasData){
-            matches = snapshot.data!.matches!;
-            print("main match page build matches: " + matches.toString());
+            match = snapshot.data!.matches![0];
+            matches = snapshot.data!.matches!.sublist(1);
+            match.profilePic != null ? matchProfilePic = imageDecode(match.profilePic!): null;
             return buildMainMatchesPage();
           }
           print("ERROR: No data for choices in profileChangingPage");
@@ -70,30 +75,29 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
       appBar: appBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-            child: Column(
+          child: Container(
+            padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+            margin: EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                    margin: EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        todaysMatchText(),
+                  todaysMatchText(),
 
-                        matchProfilePic(),
+                  matchProfile(),
 
-                        matchName(),
+                  matchName(),
 
-                        allMatchesText(),
+                  allMatchesText(),
 
-                        allMatchesDisplay(),
-                      ],
-                    ),
-                  ),
-                ]
-            )
+                  Flexible(child: PastMatches(matches: matches, email: widget.email)),
+                  // Expanded(child: PastMatches(matches)),
+                  // allMatchesDisplay(),
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
       bottomNavigationBar: BottomAppBar(
         child: myNavBar(),
       ),
@@ -119,7 +123,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
           // All Chats icon
           FloatingActionButton(
             onPressed: () {
-              Get.toNamed(AppRoutes.allChatsScreen, arguments: widget.email);
+              Get.toNamed(AppRoutes.allChatsScreen, parameters: {'email': widget.email, 'matchEmail': match.email});
             },
             child: Icon(
               Icons.sms_outlined, color: ColorConstant.whiteA700, size: 30,),
@@ -168,7 +172,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
     );
   }
 
-  matchProfilePic(){
+  matchProfile(){
     return GestureDetector(
       onTap:(){
         Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: widget.email);
@@ -178,10 +182,9 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
           children:[
             CircleAvatar(
               radius: 50,
-              // backgroundImage:
-              // profilePic != null ? profilePic!.image : null,
-              // backgroundColor: profilePic == null ? ColorConstant.deepOrange300 : null,
-              backgroundColor: ColorConstant.deepOrange300,
+              backgroundImage:
+              matchProfilePic != null ? matchProfilePic!.image : null,
+              backgroundColor: matchProfilePic == null ? ColorConstant.deepOrange300 : null,
             ),
           ]
       )
@@ -192,7 +195,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Text(
-          "Match Name",
+          match.firstName + " " + match.lastName,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: AppStyle
@@ -219,50 +222,150 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
       ),
     );
   }
+  //
+  // allMatchesDisplay() {
+  //   return GestureDetector(
+  //       onTap: () {
+  //         Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: widget.email);
+  //       },
+  //       child: Container(
+  //           width: double.infinity,
+  //           margin: EdgeInsets.only(
+  //               left: 10, top: 10, right: 10),
+  //           decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.circular(20),
+  //               border: Border.all(
+  //                   color: ColorConstant.deepOrange300, width: 1)),
+  //           child: Column(
+  //               mainAxisSize:
+  //                   MainAxisSize.min,
+  //               crossAxisAlignment:
+  //                   CrossAxisAlignment.center,
+  //               mainAxisAlignment: MainAxisAlignment.start,
+  //               children: [
+  //                 Align(
+  //                     alignment: Alignment.centerLeft,
+  //                     child: Container(
+  //                         height: getSize(
+  //                             40.00),
+  //                         width: getSize(
+  //                             40.00),
+  //                         margin: EdgeInsets.only(
+  //                             left: getHorizontalSize(
+  //                                 19.00),
+  //                             top: getVerticalSize(
+  //                                 11.00),
+  //                             right: getHorizontalSize(
+  //                                 19.00),
+  //                             bottom:
+  //                                 getVerticalSize(
+  //                                     9.00)),
+  //                         decoration: BoxDecoration(
+  //                             color: ColorConstant
+  //                                 .bluegray100,
+  //                             borderRadius:
+  //                                 BorderRadius.circular(
+  //                                     getHorizontalSize(20.00)))))
+  //               ])));
+  // }
 
-  allMatchesDisplay() {
-    return GestureDetector(
-        onTap: () {
-          Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: widget.email);
-        },
-        child: Container(
-            width: double.infinity,
-            margin: EdgeInsets.only(
-                left: 10, top: 10, right: 10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: ColorConstant.deepOrange300, width: 1)),
-            child: Column(
-                mainAxisSize:
-                    MainAxisSize.min,
-                crossAxisAlignment:
-                    CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                          height: getSize(
-                              40.00),
-                          width: getSize(
-                              40.00),
-                          margin: EdgeInsets.only(
-                              left: getHorizontalSize(
-                                  19.00),
-                              top: getVerticalSize(
-                                  11.00),
-                              right: getHorizontalSize(
-                                  19.00),
-                              bottom:
-                                  getVerticalSize(
-                                      9.00)),
-                          decoration: BoxDecoration(
-                              color: ColorConstant
-                                  .bluegray100,
-                              borderRadius:
-                                  BorderRadius.circular(
-                                      getHorizontalSize(20.00)))))
-                ])));
+  //convert image source(which is a String) to an Image.
+  imageDecode(String imageSource){
+    final decodeBytes = base64Decode(imageSource);
+    return Image.memory(decodeBytes);
+  }
+}
+
+
+class PastMatches extends StatelessWidget {
+  final List<MatchModel> matches;
+  final String email;
+  PastMatches({required this.matches, required this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: buildMatches,
+      itemCount: matches.length,
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+    );
+  }
+
+  Widget buildMatches(BuildContext context, int index){
+    return Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(top: 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: ColorConstant.deepOrange300, width: 1)),
+        child: ListTile(
+          onTap:(){
+            print("email: " + email);
+            print("matchEmail: " + matches[index].email);
+            Get.toNamed(AppRoutes.matchProfilePageScreen, parameters: {
+              'email': email,
+              'matchEmail': matches[index].email
+            });
+          },
+          leading: CircleAvatar(
+            backgroundImage:
+            matches[index].profilePic != null ? imageDecode(matches[index].profilePic!)!.image : null,
+            backgroundColor: matches[index].profilePic == null ? ColorConstant.deepOrange300 : null,
+          ),
+          title: Text(
+            matches[index].firstName + " " + matches[index].lastName,
+            style: AppStyle.textstyleinterregular153.copyWith(fontSize:getFontSize(15))),
+        ));
+    // return GestureDetector(
+    //     onTap: () {
+    //       Get.toNamed(AppRoutes.matchProfilePageScreen, parameters: {'email': email, 'matchEmail': matches[index].email});
+    //     },
+    //     child: Container(
+    //         width: double.infinity,
+    //         margin: EdgeInsets.only(top: 10),
+    //         decoration: BoxDecoration(
+    //             borderRadius: BorderRadius.circular(20),
+    //             border: Border.all(color: ColorConstant.deepOrange300, width: 1)),
+    //         child: Row(
+    //
+    //         )
+            // child: Column(
+            //     mainAxisSize:
+            //     MainAxisSize.min,
+            //     crossAxisAlignment:
+            //     CrossAxisAlignment.center,
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     children: [
+            //       Align(
+            //           alignment: Alignment.centerLeft,
+            //           child: Container(
+            //               height: getSize(
+            //                   40.00),
+            //               width: getSize(
+            //                   40.00),
+            //               margin: EdgeInsets.only(
+            //                   left: getHorizontalSize(
+            //                       19.00),
+            //                   top: getVerticalSize(
+            //                       11.00),
+            //                   right: getHorizontalSize(
+            //                       19.00),
+            //                   bottom:
+            //                   getVerticalSize(
+            //                       9.00)),
+            //               decoration: BoxDecoration(
+            //                   color: ColorConstant
+            //                       .bluegray100,
+            //                   borderRadius:
+            //                   BorderRadius.circular(
+            //                       getHorizontalSize(20.00)))))
+            //     ])
+    // ));
+  }
+
+  imageDecode(String imageSource){
+    final decodeBytes = base64Decode(imageSource);
+    return Image.memory(decodeBytes);
   }
 }

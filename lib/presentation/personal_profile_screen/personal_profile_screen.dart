@@ -78,10 +78,12 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
 
   getHobbies(PersonalProfileModel user){
     hobbies = [];
-    List<String> hobbiesChoices = user.hobbiesChoices!;
-    List<int> chosenHobbies = user.chosenHobbies!;
-    for (int index in chosenHobbies){
-      hobbies.add(hobbiesChoices[index]);
+    List<String> hobbiesChoices = user.hobbiesChoices;
+    List<int>? chosenHobbies = user.chosenHobbies;
+    if (chosenHobbies != null){
+      for (int index in chosenHobbies){
+        hobbies.add(hobbiesChoices[index]);
+      }
     }
   }
 

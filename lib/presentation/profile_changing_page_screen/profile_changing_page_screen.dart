@@ -165,7 +165,11 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
 
   loadPicker(ImageSource source) async{
     try {
-      final XFile? picked = await imagePicker.pickImage(source: source);
+      final XFile? picked = await imagePicker.pickImage(
+          source: source,
+          // maxHeight: 150,
+          // imageQuality: 100,
+      );
       if (picked != null) {
         cropImage(File(picked.path));
         setState(() {
@@ -180,8 +184,10 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
   }
 
   cropImage(File picked) async{
-    CroppedFile? cropped = await imageCropper.cropImage(sourcePath: picked.path,
-    aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0));
+    CroppedFile? cropped = await imageCropper.cropImage(
+      sourcePath: picked.path,
+      aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0)
+    );
     if (cropped != null){
       File croppedImage = File(cropped.path);
       setState(() {

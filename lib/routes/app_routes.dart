@@ -70,7 +70,7 @@ class AppRoutes {
     ),
     GetPage(
       name: matchProfilePageScreen,
-      page: () => MatchProfilePageScreen(Get.arguments),
+      page: () => MatchProfilePageScreen(Get.parameters['email']!, Get.parameters['matchEmail']!),
       bindings: [
         MatchProfilePageBinding(),
       ],

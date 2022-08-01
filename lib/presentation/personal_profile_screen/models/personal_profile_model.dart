@@ -5,7 +5,7 @@ class PersonalProfileModel {
   final String? aboutYou;
   final String? profilePic;
   final List<String> hobbiesChoices;
-  final List<int> chosenHobbies;
+  final List<int>? chosenHobbies;
 
 
   PersonalProfileModel({

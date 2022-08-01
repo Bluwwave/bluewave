@@ -64,16 +64,18 @@ class APIService {
   }
 
   Future<MainMatchPageModel> getMatches(String email) async{
-    String getMatchesUrl = url + "/matching";
+    String getMatchesUrl = url + "/get_matches";
     print("before http request");
     final response = await http.post(Uri.parse(getMatchesUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     print("after http request");
     print(response.body);
-    final message = json.decode(response.body);
+    final message = jsonDecode(response.body);
     print("get matches api");
     print(message);
-    return MainMatchPageModel.fromJson(message);
-
+    // return MainMatchPageModel.fromJson(message);
+    MainMatchPageModel model = MainMatchPageModel.fromJson(message);
+    print("api model to String: " + model.toString());
+    return model;
   }
 
 
