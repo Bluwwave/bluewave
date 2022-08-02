@@ -65,7 +65,7 @@ class MatchProfilePageScreen extends StatelessWidget {
 
   buildProfilePage() {
     return Scaffold(
-      backgroundColor: ColorConstant.deepOrange50,
+      backgroundColor: ColorConstant.backGroundColor,
       appBar: appBar(),
       body: SafeArea(
         child: SingleChildScrollView(

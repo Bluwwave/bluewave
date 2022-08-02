@@ -85,7 +85,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
               profilePicSource == null ? profilePicSource = snapshot.data!.profilePic: null;
               // print("after" + profilePicSource.toString());
               profilePicSource != null ? profilePic = imageDecode(profilePicSource!): profilePic = null;
-              print("chosenHobbies: " + initialHobbies.toString() + ", chosenLookingfor: " + initialLookingFor.toString() + ", aboutYou: " + aboutYou.toString());
+              // print("chosenHobbies: " + initialHobbies.toString() + ", chosenLookingfor: " + initialLookingFor.toString() + ", aboutYou: " + aboutYou.toString());
             return buildProfileChangingPage();
           } else {
             print("ERROR: No data for choices in profileChangingPage");
@@ -99,7 +99,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
 
   buildProfileChangingPage() {
     return Scaffold(
-      backgroundColor: ColorConstant.deepOrange50,
+      backgroundColor: ColorConstant.backGroundColor,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: ColorConstant.deepOrange300,
@@ -167,8 +167,8 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
     try {
       final XFile? picked = await imagePicker.pickImage(
           source: source,
-          // maxHeight: 150,
-          // imageQuality: 100,
+          maxHeight: 300,
+          imageQuality: 0,
       );
       if (picked != null) {
         cropImage(File(picked.path));
@@ -226,7 +226,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
   Widget selectHobbies(){
     return Container(
       child: GFMultiSelect(
-        initialSelectedItemsIndex: initialHobbies != null ? initialHobbies : null,
+        initialSelectedItemsIndex: initialHobbies,
 
         // should we get items from backend
         items: hobbies,
@@ -238,7 +238,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
         //dropdown Title
         dropdownTitleTileHintText: 'Select Your Hobbies',
         dropdownTitleTileHintTextStyle: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
-        dropdownTitleTileColor: ColorConstant.deepOrange50,
+        // dropdownTitleTileColor: ColorConstant.deepOrange50,
         dropdownTitleTileMargin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         dropdownTitleTilePadding: EdgeInsets.all(10),
         // dropdownTitleTileText: hobbiesEmpty ? "Hobbies Cannot Be Empty(need to change color)" : "",
@@ -287,7 +287,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
         //dropdown Title
         dropdownTitleTileHintText: 'Looking For',
         dropdownTitleTileHintTextStyle: AppStyle.textstyleinterregular15.copyWith(fontSize: getFontSize(15), color: ColorConstant.deepOrange300),
-        dropdownTitleTileColor: ColorConstant.deepOrange50,
+        // dropdownTitleTileColor: ColorConstant.deepOrange50,
         dropdownTitleTileMargin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
         dropdownTitleTilePadding: EdgeInsets.all(10),
         // dropdownTitleTileText: lookingForEmpty ? "LookingFor Cannot Be Empty" : "",
@@ -366,7 +366,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
           maxLines: 5,
           decoration: InputDecoration(
             suffixIconColor: ColorConstant.deepOrange300,
-            fillColor: ColorConstant.whiteA700,
+            fillColor: ColorConstant.deepOrange50,
             filled: true,
             contentPadding: EdgeInsets.all(20),
             enabledBorder: OutlineInputBorder(
@@ -390,12 +390,16 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
     //   buildProfileChangingPage();
     // } else {
       aboutYou = aboutYouController.text;
-      final newProfile = UpdatedProfileModel(email: widget.email,
-          chosenHobbies: chosenHobbies, chosenLookingFor: chosenLookingFor,
-          aboutYou: aboutYou, profilePic: profilePicSource);
+      var newProfile = UpdatedProfileModel(
+          email: widget.email,
+          chosenHobbies: chosenHobbies != null ? chosenHobbies : initialHobbies,
+          chosenLookingFor: chosenLookingFor != null ? chosenLookingFor : initialLookingFor,
+          aboutYou: aboutYou,
+          profilePic: profilePicSource
+      );
       print(widget.email);
-      print(chosenHobbies);
-      print(chosenLookingFor);
+      print("chosenHobbies:" + chosenHobbies.toString());
+      print("chosenLookingFor: " + chosenLookingFor.toString());
       print("aboutYou: " + aboutYou.toString());
       await APIService().updateProfileInfo(newProfile);
       Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);

@@ -71,7 +71,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
 
   buildMainMatchesPage(){
     return Scaffold(
-      backgroundColor: ColorConstant.deepOrange50,
+      backgroundColor: ColorConstant.backGroundColor,
       appBar: appBar(),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -175,7 +175,10 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
   matchProfile(){
     return GestureDetector(
       onTap:(){
-        Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: widget.email);
+        Get.toNamed(AppRoutes.matchProfilePageScreen, parameters: {
+          'email': widget.email,
+          'matchEmail': matches[0].email
+        });
       },
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

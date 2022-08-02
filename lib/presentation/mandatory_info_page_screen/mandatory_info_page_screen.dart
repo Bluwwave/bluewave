@@ -30,7 +30,7 @@ class MandatoryInfoPageState extends State<MandatoryInfoPage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: ColorConstant.deepOrange50,
+      backgroundColor: ColorConstant.backGroundColor,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

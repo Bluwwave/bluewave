@@ -94,7 +94,7 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
 
   buildProfilePage() {
     return Scaffold(
-      backgroundColor: ColorConstant.deepOrange50,
+      backgroundColor: ColorConstant.backGroundColor,
       appBar: appBar(),
       body: SafeArea(
         child: SingleChildScrollView(
