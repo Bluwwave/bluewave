@@ -22,8 +22,9 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
 
   late Future<MainMatchPageModel> matchesInfo;
 
-  late List<MatchModel> matches; //past matches
-  late MatchModel match; //today's match
+  late bool hasMatchForToday;
+  List<MatchModel>? matches; //past matches
+  MatchModel? match; //today's match
   Image? matchProfilePic; //today's match's profile pic
 
 
@@ -54,9 +55,12 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
             print("MainMatchPage something went wrong");
             return Center(child: Text('Something Went Wrong!'));
           } else if (snapshot.hasData){
-            match = snapshot.data!.matches![0];
-            matches = snapshot.data!.matches!.sublist(1);
-            match.profilePic != null ? matchProfilePic = imageDecode(match.profilePic!): null;
+            hasMatchForToday = snapshot.data!.hasMatchForToday;
+            if (hasMatchForToday == true){
+              match = snapshot.data!.matchForToday;
+              match!.profilePic != null ? matchProfilePic = imageDecode(match!.profilePic!): null;
+            }
+            matches = snapshot.data!.pastMatches;
             return buildMainMatchesPage();
           }
           print("ERROR: No data for choices in profileChangingPage");
@@ -82,15 +86,18 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  todaysMatchText(),
+                    todaysMatchDisplay(),
+                  // todaysMatchText(),
+                  //
+                  // matchProfile(),
+                  //
+                  // matchName(),
 
-                  matchProfile(),
+                  PastMatchesText(),
 
-                  matchName(),
-
-                  allMatchesText(),
-
-                  Flexible(child: PastMatches(matches: matches, email: widget.email)),
+                  matches != null ?
+                  Flexible(child: PastMatches(matches: matches!, email: widget.email)):
+                  new Container(height: 0, width: 0),
                   // Expanded(child: PastMatches(matches)),
                   // allMatchesDisplay(),
                 ],
@@ -123,7 +130,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
           // All Chats icon
           FloatingActionButton(
             onPressed: () {
-              Get.toNamed(AppRoutes.allChatsScreen, parameters: {'email': widget.email, 'matchEmail': match.email});
+              Get.toNamed(AppRoutes.allChatsScreen, arguments: {'email': widget.email});
             },
             child: Icon(
               Icons.sms_outlined, color: ColorConstant.whiteA700, size: 30,),
@@ -156,6 +163,40 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
     );
   }
 
+  todaysMatchDisplay(){
+
+    if (hasMatchForToday){
+      return Column(
+        children: [
+          todaysMatchText(),
+
+          matchProfile(),
+
+          matchName(),
+        ],
+      );
+    } else {
+      return noMatchText();
+    }
+  }
+
+  noMatchText(){
+    return Padding(
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      child: Text(
+          "Unfortunately, there isn't any available match at the moment:(, please check back later",
+          softWrap: true,
+          // overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: AppStyle
+              .textstyleinterregular153
+              .copyWith(
+              fontSize:
+              getFontSize(15))
+      ),
+    );
+  }
+
   todaysMatchText(){
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 15),
@@ -177,7 +218,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
       onTap:(){
         Get.toNamed(AppRoutes.matchProfilePageScreen, parameters: {
           'email': widget.email,
-          'matchEmail': matches[0].email
+          'matchEmail': match!.email
         });
       },
       child: Row(
@@ -198,7 +239,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Text(
-          match.firstName + " " + match.lastName,
+          match!.firstName + " " + match!.lastName,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: AppStyle
@@ -210,11 +251,11 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
     );
   }
 
-  allMatchesText() {
+  PastMatchesText() {
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Text(
-          "All Matches",
+          "Past Matches",
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
           style: AppStyle
@@ -304,8 +345,6 @@ class PastMatches extends StatelessWidget {
             border: Border.all(color: ColorConstant.deepOrange300, width: 1)),
         child: ListTile(
           onTap:(){
-            print("email: " + email);
-            print("matchEmail: " + matches[index].email);
             Get.toNamed(AppRoutes.matchProfilePageScreen, parameters: {
               'email': email,
               'matchEmail': matches[index].email

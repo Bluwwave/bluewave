@@ -124,11 +124,11 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
 
                         aboutYouText(),
 
+                        nextButton(),
+
                       ],
                     ),
                   ),
-
-                  nextButton(),
                 ]
             )
 
@@ -320,31 +320,6 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
     );
   }
 
-  Widget nextButton(){
-    return Align(
-      alignment: Alignment.bottomRight,
-        child: GestureDetector(
-            onTap: () {
-              onTapTxtNext();
-            },
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: getHorizontalSize(25.00),
-                    bottom: getHorizontalSize(10.00),
-                    right:getHorizontalSize(25.00)),
-                child: Text("lbl_next".tr,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: AppStyle
-                      .textstyleinterregular20
-                      .copyWith(fontSize:getFontSize(20), color: ColorConstant.lightBlueA100),
-
-                )
-            )
-        )
-    );
-  }
-
   Widget aboutYouText(){
     return Container(
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -378,17 +353,32 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
     ]));
   }
 
+
+  Widget nextButton(){
+    return Align(
+        alignment: Alignment.bottomRight,
+        child: GestureDetector(
+            onTap: () {
+              onTapTxtNext();
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.only(top: 10, right: 10),
+              child: Text("lbl_next".tr,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.left,
+                style: AppStyle
+                    .textstyleinterregular20
+                    .copyWith(fontSize:getFontSize(20), color: ColorConstant.lightBlueA100),
+
+              )
+            )
+        )
+    );
+  }
+
   //Need to be connected with backend
   onTapTxtNext() async{
-    // Hobbies and LookingFor required feature:
-    //
-    // if (chosenHobbies == null  || chosenLookingFor == null){
-    //   setState((){
-    //     chosenHobbies == null ? hobbiesEmpty = true : hobbiesEmpty = false;
-    //     chosenLookingFor == null ? lookingForEmpty = true : lookingForEmpty = false;
-    //   });
-    //   buildProfileChangingPage();
-    // } else {
       aboutYou = aboutYouController.text;
       var newProfile = UpdatedProfileModel(
           email: widget.email,
@@ -397,10 +387,6 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
           aboutYou: aboutYou,
           profilePic: profilePicSource
       );
-      print(widget.email);
-      print("chosenHobbies:" + chosenHobbies.toString());
-      print("chosenLookingFor: " + chosenLookingFor.toString());
-      print("aboutYou: " + aboutYou.toString());
       await APIService().updateProfileInfo(newProfile);
       Get.toNamed(AppRoutes.mainMatchesPageScreen, arguments: widget.email);
   }

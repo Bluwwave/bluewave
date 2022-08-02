@@ -30,21 +30,33 @@ class MatchModel {
 }
 
 class MainMatchPageModel {
-  List<MatchModel>? matches;
 
-  MainMatchPageModel({this.matches});
+  bool hasMatchForToday;
+  MatchModel? matchForToday;
+  List<MatchModel>? pastMatches;
+
+  MainMatchPageModel({required this.hasMatchForToday, this.matchForToday, this.pastMatches});
 
   // factory MainMatchPageModel.fromJson(Map<String, dynamic> json) => MainMatchPageModel(
   //   matches: json['matches'] != null ? List<MatchModel>.from(json['matches']) : [],
   // );
 
-  factory MainMatchPageModel.fromJson(Map<String, dynamic> json){
+  factory MainMatchPageModel.fromJson(Map<String, dynamic> json, int statusCode){
+    print("main match model has match: " + statusCode.toString());
+    var hasMatch = false;
+    if (statusCode == 200){
+      hasMatch = true;
+    }
     print("model:" + json.toString());
     var list = json['matches'] as List;
     print("list: " + list.toString());
-    List<MatchModel>? pastMatches = list.map((i) => MatchModel.fromJson(i)).toList();
+    List<MatchModel>? matches = list.map((i) => MatchModel.fromJson(i)).toList();
     print("pastMatches");
-    return MainMatchPageModel(matches: pastMatches);
+    return MainMatchPageModel(
+        hasMatchForToday: hasMatch,
+        matchForToday: hasMatch ? matches[0] : null,
+        pastMatches: hasMatch ? matches.sublist(1) : matches
+    );
     // List<MatchModel>? pastMatches = List<MatchModel>.from(json['matches']);
     // print(pastMatches);
     // return MainMatchPageModel(matches: pastMatches);
