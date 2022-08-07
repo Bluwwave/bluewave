@@ -79,6 +79,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
       appBar: appBar(),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: ScrollPhysics(),
           child: Container(
             padding: EdgeInsets.only(top: 10, left: 10, right: 10),
             margin: EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -100,6 +101,10 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
                   new Container(height: 0, width: 0),
                   // Expanded(child: PastMatches(matches)),
                   // allMatchesDisplay(),
+
+                  SizedBox(height: 15),
+
+
                 ],
               ),
             ),
@@ -329,6 +334,7 @@ class PastMatches extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: ClampingScrollPhysics(),
       itemBuilder: buildMatches,
       itemCount: matches.length,
       scrollDirection: Axis.vertical,

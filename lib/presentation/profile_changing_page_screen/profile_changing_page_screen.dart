@@ -167,8 +167,6 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
     try {
       final XFile? picked = await imagePicker.pickImage(
           source: source,
-          maxHeight: 300,
-          imageQuality: 0,
       );
       if (picked != null) {
         cropImage(File(picked.path));
@@ -186,7 +184,8 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
   cropImage(File picked) async{
     CroppedFile? cropped = await imageCropper.cropImage(
       sourcePath: picked.path,
-      aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0)
+      aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
+      maxHeight: 200,
     );
     if (cropped != null){
       File croppedImage = File(cropped.path);
@@ -346,7 +345,7 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
             contentPadding: EdgeInsets.all(20),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: ColorConstant.whiteA700),
+              borderSide: BorderSide(color: ColorConstant.deepOrange50),
             ),
           ),
           )

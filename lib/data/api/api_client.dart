@@ -74,11 +74,11 @@ class APIService {
 
   // Get list of users that current user can chat with from backend
   // the response should contain names of user, imageUrl, timestamp, content of most recent message, isMessageRead
-  Future<AllChatsModel> getRecentChats(MandatoryInfoModel user) async{
-    String infoUrl = url + "/get_recent_chats";
-    final response = await http.post(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email}));
-    return AllChatsModel.fromJson(json.decode(response.body));
-  }
+  // Future<AllChatsModel> getRecentChats(MandatoryInfoModel user) async{
+  //   String infoUrl = url + "/get_recent_chats";
+  //   final response = await http.post(Uri.parse(infoUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': user.email}));
+  //   return AllChatsModel.fromJson(json.decode(response.body));
+  // }
 
 /*
   // Get list of all chats from current user with person user is chatting with now

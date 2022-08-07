@@ -68,32 +68,16 @@ class MatchProfilePageScreen extends StatelessWidget {
       backgroundColor: ColorConstant.backGroundColor,
       appBar: appBar(),
       body: SafeArea(
-        child: SingleChildScrollView(
-            child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                    margin: EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // userName(),
+        // child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                userProfile(),
 
-                        profilePic(),
+                chatWithMatch(),
 
-                        userName(),
-
-                        aboutYouText(),
-
-                        hobbyTags(),
-                      ],
-                    ),
-                  ),
-
-                  // logOutButton(),
-                ]
+              ],
             )
-        ),
+        // ),
       ),
 
       bottomNavigationBar: BottomAppBar(
@@ -111,6 +95,31 @@ class MatchProfilePageScreen extends StatelessWidget {
     );
   }
 
+  Widget userProfile(){
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+          margin: EdgeInsets.only(top: 20, left: 20, right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+            // userName(),
+
+              profilePic(),
+
+              userName(),
+
+              aboutYouText(),
+
+              hobbyTags(),
+            ],
+          ),
+        ),
+    // logOutButton(),
+      ]
+    );
+  }
 
   Widget userName(){
     return Container(
@@ -161,7 +170,6 @@ class MatchProfilePageScreen extends StatelessWidget {
     );
   }
 
-
   Widget hobbyTags(){
     if (hobbies.length == 0){
       return new Container(width: 0, height: 0);
@@ -178,6 +186,30 @@ class MatchProfilePageScreen extends StatelessWidget {
           pressEnabled: false,
         );
       },
+    );
+  }
+
+  Widget chatWithMatch(){
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 25),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: ColorConstant.deepOrange300, width: 1),
+          color: ColorConstant.deepOrange50,
+        ),
+        child: Text(
+          "Chat With Match",
+          textAlign: TextAlign.center,
+            style: AppStyle
+              .textstyleinterregular155
+              .copyWith(
+                fontSize:
+                    getFontSize(15))
+        ),
+      )
     );
   }
 
