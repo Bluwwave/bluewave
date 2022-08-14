@@ -191,6 +191,14 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
                   backgroundImage:
                   profilePicture != null ? profilePicture!.image : null,
                   backgroundColor: profilePicture == null ? ColorConstant.deepOrange300 : null,
+                  child: profilePicture == null ?
+                  Text(name[0].toUpperCase(),
+                    style: AppStyle
+                        .textstyleinterregular153
+                        .copyWith(
+                        fontSize:
+                        getFontSize(25), color: ColorConstant.whiteA700),
+                  ): null,
                 ),
               ]
           )
@@ -242,7 +250,7 @@ class _PersonalProfilePageState extends State<PersonalProfileScreen>{
           // All Chats icon
           FloatingActionButton(
             onPressed: (){
-              Get.toNamed(AppRoutes.allChatsScreen);
+              Get.toNamed(AppRoutes.allChatsScreen, arguments: widget.email);
             },
             child: Icon(Icons.sms_outlined,color: ColorConstant.whiteA700,size: 30,),
             backgroundColor: ColorConstant.lightBlueA100,

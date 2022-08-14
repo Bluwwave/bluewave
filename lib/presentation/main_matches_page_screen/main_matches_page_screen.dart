@@ -231,9 +231,16 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
           children:[
             CircleAvatar(
               radius: 50,
-              backgroundImage:
-              matchProfilePic != null ? matchProfilePic!.image : null,
+              backgroundImage: matchProfilePic != null ? matchProfilePic!.image : null,
               backgroundColor: matchProfilePic == null ? ColorConstant.deepOrange300 : null,
+              child: matchProfilePic == null ?
+                Text(match!.firstName[0].toUpperCase(),
+                  style: AppStyle
+                    .textstyleinterregular153
+                    .copyWith(
+                    fontSize:
+                    getFontSize(15)),
+                ): null
             ),
           ]
       )
@@ -267,7 +274,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
               .textstyleinterregular153
               .copyWith(
               fontSize:
-              getFontSize(15))
+              getFontSize(25))
       ),
     );
   }
@@ -314,6 +321,14 @@ class PastMatches extends StatelessWidget {
             backgroundImage:
             matches[index].profilePic != null ? imageDecode(matches[index].profilePic!)!.image : null,
             backgroundColor: matches[index].profilePic == null ? ColorConstant.deepOrange300 : null,
+            child: matches[index].profilePic == null ?
+              Text(matches[index].firstName[0].toUpperCase(),
+                style: AppStyle
+                    .textstyleinterregular153
+                    .copyWith(
+                    fontSize:
+                    getFontSize(25), color: ColorConstant.whiteA700),
+              ): null,
           ),
           title: Text(
             matches[index].firstName + " " + matches[index].lastName,
