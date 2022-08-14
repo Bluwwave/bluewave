@@ -223,7 +223,7 @@ class MatchProfilePageScreen extends StatelessWidget {
           // All Chats icon
           FloatingActionButton(
             onPressed: (){
-              Get.toNamed(AppRoutes.allChatsScreen);
+              Get.toNamed(AppRoutes.allChatsScreen, arguments: email);
             },
             child: Icon(Icons.sms_outlined,color: ColorConstant.whiteA700,size: 30,),
             backgroundColor: ColorConstant.lightBlueA100,

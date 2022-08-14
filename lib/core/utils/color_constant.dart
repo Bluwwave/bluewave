@@ -34,6 +34,8 @@ class ColorConstant {
 
   static Color backGroundColor = fromHex('#ffffff');
 
+  static Color grey = fromHex('#7e7e7e');
+
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

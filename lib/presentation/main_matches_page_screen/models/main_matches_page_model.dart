@@ -42,23 +42,16 @@ class MainMatchPageModel {
   // );
 
   factory MainMatchPageModel.fromJson(Map<String, dynamic> json, int statusCode){
-    print("main match model has match: " + statusCode.toString());
     var hasMatch = false;
     if (statusCode == 200){
       hasMatch = true;
     }
-    print("model:" + json.toString());
     var list = json['matches'] as List;
-    print("list: " + list.toString());
     List<MatchModel>? matches = list.map((i) => MatchModel.fromJson(i)).toList();
-    print("pastMatches");
     return MainMatchPageModel(
         hasMatchForToday: hasMatch,
         matchForToday: hasMatch ? matches[0] : null,
         pastMatches: hasMatch ? matches.sublist(1) : matches
     );
-    // List<MatchModel>? pastMatches = List<MatchModel>.from(json['matches']);
-    // print(pastMatches);
-    // return MainMatchPageModel(matches: pastMatches);
   }
 }

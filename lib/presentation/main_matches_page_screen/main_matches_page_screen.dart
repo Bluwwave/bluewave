@@ -135,7 +135,7 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
           // All Chats icon
           FloatingActionButton(
             onPressed: () {
-              Get.toNamed(AppRoutes.allChatsScreen, arguments: {'email': widget.email});
+              Get.toNamed(AppRoutes.allChatsScreen, arguments: widget.email);
             },
             child: Icon(
               Icons.sms_outlined, color: ColorConstant.whiteA700, size: 30,),
@@ -145,8 +145,8 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
           // Match Page icon
           FloatingActionButton(
             onPressed: () {
-              Get.toNamed(
-                  AppRoutes.mainMatchesPageScreen, arguments: widget.email);
+              // Get.toNamed(
+              //     AppRoutes.mainMatchesPageScreen, arguments: widget.email);
             },
             child: Icon(
               Icons.home_outlined, color: ColorConstant.whiteA700, size: 30,),
@@ -271,52 +271,6 @@ class _MainMatchesPageState extends State<MainMatchesPageScreen>{
       ),
     );
   }
-  //
-  // allMatchesDisplay() {
-  //   return GestureDetector(
-  //       onTap: () {
-  //         Get.toNamed(AppRoutes.matchProfilePageScreen, arguments: widget.email);
-  //       },
-  //       child: Container(
-  //           width: double.infinity,
-  //           margin: EdgeInsets.only(
-  //               left: 10, top: 10, right: 10),
-  //           decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(20),
-  //               border: Border.all(
-  //                   color: ColorConstant.deepOrange300, width: 1)),
-  //           child: Column(
-  //               mainAxisSize:
-  //                   MainAxisSize.min,
-  //               crossAxisAlignment:
-  //                   CrossAxisAlignment.center,
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               children: [
-  //                 Align(
-  //                     alignment: Alignment.centerLeft,
-  //                     child: Container(
-  //                         height: getSize(
-  //                             40.00),
-  //                         width: getSize(
-  //                             40.00),
-  //                         margin: EdgeInsets.only(
-  //                             left: getHorizontalSize(
-  //                                 19.00),
-  //                             top: getVerticalSize(
-  //                                 11.00),
-  //                             right: getHorizontalSize(
-  //                                 19.00),
-  //                             bottom:
-  //                                 getVerticalSize(
-  //                                     9.00)),
-  //                         decoration: BoxDecoration(
-  //                             color: ColorConstant
-  //                                 .bluegray100,
-  //                             borderRadius:
-  //                                 BorderRadius.circular(
-  //                                     getHorizontalSize(20.00)))))
-  //               ])));
-  // }
 
   //convert image source(which is a String) to an Image.
   imageDecode(String imageSource){

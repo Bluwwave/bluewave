@@ -67,8 +67,22 @@ class APIService {
     String getMatchesUrl = url + "/get_matches";
     final response = await http.post(Uri.parse(getMatchesUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     final message = jsonDecode(response.body);
-    print("get matches api");
+    print("get matches api" + message.toString());
     return MainMatchPageModel.fromJson(message, response.statusCode);
+  }
+
+
+  Stream<AllChatsModel> getChatUsers(String email) async*{
+    String getChatUsersUrl = url + "/get_recent_chats";
+    await Future.delayed(Duration(seconds: 5));
+    var response = await http.post(Uri.parse(getChatUsersUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
+    var message = jsonDecode(response.body);
+    print("AllChatsPage api: " + message.toString());
+    AllChatsModel result = AllChatsModel.fromJson(message);
+    print("after");
+    yield result;
+    // yield AllChatsModel.fromJson(message);
+
   }
 
 
