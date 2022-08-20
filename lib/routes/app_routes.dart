@@ -77,9 +77,8 @@ class AppRoutes {
     ),
     GetPage(
       name: chatWithMatchScreen,
-      page: () => ChatWithMatchScreen(),
+      page: () => ChatWithMatchScreen(Get.parameters['currEmail']!, Get.parameters['otherEmail']!, Get.parameters['otherName']!),
       bindings: [
-        ChatWithMatchBinding(),
       ],
     ),
     GetPage(

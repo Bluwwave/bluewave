@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../presentation/all_chats_screen/models/all_chats_model.dart';
+import '../../presentation/chat_with_match_screen/models/chat_with_match_model.dart';
 import '../../presentation/login_page_screen/models/login_page_model.dart';
 import '../../presentation/mandatory_info_page_screen/models/mandatory_info_page_model.dart';
 import '../../presentation/personal_profile_screen/models/personal_profile_model.dart';
@@ -38,15 +39,10 @@ class APIService {
 
   Future<InitialProfileModel> getChoices(String? email) async{
     String getProfileUrl = url + "/get_profile";
-    print("get choices api calling");
     final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     final message = json.decode(response.body);
-    print("get choices response: " + message.toString());
-    print("hello");
     print(InitialProfileModel.fromJson(message));
     InitialProfileModel initialProfile = InitialProfileModel.fromJson(message);
-    print("after");
-    print(initialProfile.toString());
     return InitialProfileModel.fromJson(message);
   }
 
@@ -59,7 +55,6 @@ class APIService {
     String getProfileUrl = url + "/get_profile";
     final response = await http.post(Uri.parse(getProfileUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     final message = json.decode(response.body);
-    print(PersonalProfileModel.fromJson(message));
     return PersonalProfileModel.fromJson(message);
   }
 
@@ -67,23 +62,30 @@ class APIService {
     String getMatchesUrl = url + "/get_matches";
     final response = await http.post(Uri.parse(getMatchesUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     final message = jsonDecode(response.body);
-    print("get matches api" + message.toString());
     return MainMatchPageModel.fromJson(message, response.statusCode);
   }
 
 
   Stream<AllChatsModel> getChatUsers(String email) async*{
     String getChatUsersUrl = url + "/get_recent_chats";
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 30));
     var response = await http.post(Uri.parse(getChatUsersUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
     var message = jsonDecode(response.body);
-    print("AllChatsPage api: " + message.toString());
     AllChatsModel result = AllChatsModel.fromJson(message);
-    print("after");
     yield result;
     // yield AllChatsModel.fromJson(message);
 
   }
+
+  Stream<ChatWithMatchModel> getPastChats(String currEmail, String otherEmail) async*{
+    String getPastChatsUrl = url + "/get_past_chats";
+    await Future.delayed(Duration(seconds: 5));
+    var response = await http.post(Uri.parse(getPastChatsUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'emailCurr': currEmail, 'emailOther': otherEmail}));
+    var message = jsonDecode(response.body);
+    ChatWithMatchModel result = ChatWithMatchModel.fromJson(message);
+    yield result;
+  }
+
 
 
   // Get list of users that current user can chat with from backend

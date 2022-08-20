@@ -64,75 +64,85 @@ class AllChatsScreenState extends State<AllChatsScreen> {
                                         top: 5, bottom: 5, right: 10),
                                     padding: EdgeInsets.symmetric(
                                         vertical: 5, horizontal: 10),
-                                    child: Row(
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .spaceBetween,
-                                        children: <Widget>[
-                                          Row(
-                                              children: <Widget>[
-                                                CircleAvatar(
-                                                  radius: 25.0,
-                                                  backgroundImage: user
-                                                      .profilePic != null
-                                                      ? imageDecode(
-                                                      user.profilePic!)
-                                                      : null,
-                                                  backgroundColor: ColorConstant
-                                                      .deepOrange300,
-                                                  child: user.profilePic == null ?
-                                                  Text(user.name[0].toUpperCase(),
-                                                    style: AppStyle
-                                                        .textstyleinterregular153
-                                                        .copyWith(
-                                                        fontSize:
-                                                        getFontSize(25), color: ColorConstant.whiteA700),
-                                                  ): null,
-                                                ),
-                                                SizedBox(width: 5),
-                                                Column(
-                                                    mainAxisAlignment: MainAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      Text(
-                                                        user.name,
-                                                        style: AppStyle
-                                                            .textstyleinterregular15
-                                                            .copyWith(
-                                                            fontSize: getFontSize(
-                                                                15),
-                                                            color: ColorConstant
-                                                                .black900),
-                                                      ),
-                                                      SizedBox(height: 5.0,),
-                                                      Text(
-                                                        user.content,
-                                                        style: TextStyle(
-                                                          color: user
-                                                              .isMessageRead
-                                                              ? ColorConstant
-                                                              .grey
-                                                              : ColorConstant
-                                                              .black900,
-                                                          fontWeight: user
-                                                              .isMessageRead
-                                                              ? null
-                                                              : FontWeight.bold,
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        Get.toNamed(AppRoutes.chatWithMatchScreen, parameters: {
+                                          'currEmail': widget.email,
+                                          'otherEmail': user.email,
+                                          'otherName': user.name,
+                                        });
+                                      },
+                                      child: Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceBetween,
+                                          children: <Widget>[
+                                            Row(
+                                                children: <Widget>[
+                                                  CircleAvatar(
+                                                    radius: 25.0,
+                                                    backgroundImage: user
+                                                        .profilePic != null
+                                                        ? imageDecode(
+                                                        user.profilePic!)
+                                                        : null,
+                                                    backgroundColor: ColorConstant
+                                                        .deepOrange300,
+                                                    child: user.profilePic == null ?
+                                                    Text(user.name[0].toUpperCase(),
+                                                      style: AppStyle
+                                                          .textstyleinterregular153
+                                                          .copyWith(
+                                                          fontSize:
+                                                          getFontSize(25), color: ColorConstant.whiteA700),
+                                                    ): null,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Column(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        Text(
+                                                          user.name,
+                                                          style: AppStyle
+                                                              .textstyleinterregular15
+                                                              .copyWith(
+                                                              fontSize: getFontSize(
+                                                                  15),
+                                                              color: ColorConstant
+                                                                  .black900),
                                                         ),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      )
-                                                    ]
-                                                ),
-                                              ]
-                                          ),
-                                          Column(
-                                              children: <Widget>[
-                                                Text(user.time),
+                                                        SizedBox(height: 5.0,),
+                                                        Text(
+                                                          user.content,
+                                                          style: TextStyle(
+                                                            color: user
+                                                                .isMessageRead
+                                                                ? ColorConstant
+                                                                .grey
+                                                                : ColorConstant
+                                                                .black900,
+                                                            fontWeight: user
+                                                                .isMessageRead
+                                                                ? null
+                                                                : FontWeight.bold,
 
-                                              ]
-                                          )
-                                        ]
-                                    ),
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        )
+                                                      ]
+                                                  ),
+                                                ]
+                                            ),
+                                            Column(
+                                                children: <Widget>[
+                                                  Text(user.time),
+
+                                                ]
+                                            )
+                                          ]
+                                      ),
+                                    )
                                   );
                                 }
                             ),

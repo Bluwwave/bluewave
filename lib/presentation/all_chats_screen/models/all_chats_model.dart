@@ -1,6 +1,7 @@
 
 // Version with firebase backend
 class ChatUser {
+  final String email;
   final String name;
   final bool isMessageRead;
   final String time;
@@ -9,6 +10,7 @@ class ChatUser {
 
 
   const ChatUser({
+    required this.email,
     required this.name,
     required this.isMessageRead,
     required this.time,
@@ -26,14 +28,13 @@ class ChatUser {
 
   factory ChatUser.fromJson(Map<String, dynamic> json){
     ChatUser result = ChatUser(
+      email: json['email'],
       name: json['name'],
       isMessageRead: json['isMessageRead'],
       time: json['time'],
       content: json['content'],
       profilePic: json['imageUrl'],
     );
-
-    print("hello");
     return result;
   }
 
