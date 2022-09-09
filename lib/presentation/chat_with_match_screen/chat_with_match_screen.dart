@@ -1,5 +1,7 @@
 
 
+import 'dart:convert';
+
 import 'package:bluewave/data/api/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,17 +26,20 @@ class _ChatWithMatchState extends State<ChatWithMatchScreen>{
 
   late Map<String, dynamic> userInfo;
   late List<Message> pastChats;
+  late List<Message> reversedMessages;
+  final newMessageController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
+  late Stream<ChatWithMatchModel> chatsModel;
+
+  @override
+  void initState() {
+    super.initState();
+    chatsModel = APIService().getPastChats(widget.currEmail, widget.otherEmail);
+  }
 
   @override
   Widget build(BuildContext context){
-    print(widget.otherEmail);
-    print(widget.otherName);
+    print('chat with match page reload');
 
     return Scaffold(
       backgroundColor: ColorConstant.whiteA700,
@@ -45,19 +50,26 @@ class _ChatWithMatchState extends State<ChatWithMatchScreen>{
             fontSize: getFontSize(15))),
       ),
       body: StreamBuilder(
-        stream: APIService().getPastChats(widget.currEmail, widget.otherEmail),
+        stream: chatsModel,
         builder: (context, AsyncSnapshot<ChatWithMatchModel> snapshot){
           if (snapshot.hasError) {
             print("ChatWithMatchPage something went wrong");
             print(snapshot.error?.toString());
             return Center(child: Text('Something Went Wrong!'));
+          } else if (snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
-            userInfo = snapshot.data!.userInfo;
-            pastChats = snapshot.data!.pastChats;
+            // if (pastChats != snapshot.data!.pastChats){
+            //   setState((){
+                pastChats = snapshot.data!.pastChats;
+                reversedMessages = List.from(pastChats.reversed);
+              // });
+            // }
+
+
+            // pastChats = snapshot.data!.pastChats;
+            // reversedMessages = List.from(pastChats.reversed);
             return buildPastChats();
-
-
-            return SizedBox(height: 10,);
           }
           return Center(child: CircularProgressIndicator());
         },
@@ -67,52 +79,184 @@ class _ChatWithMatchState extends State<ChatWithMatchScreen>{
   }
 
   Widget buildPastChats(){
-    for (int i = 0; i < pastChats.length; i++){
-      print("chats: " + pastChats[i].emailFrom);
-    }
-    print(pastChats.length);
     return Stack(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 20),
-          padding: EdgeInsets.all(20),
+          margin: EdgeInsets.only(top: 10),
+          padding: EdgeInsets.fromLTRB(25,20,25,80),
             child: ListView.separated(
+              reverse: true,
+              // controller: _scrollController,
+              padding: EdgeInsets.zero,
               itemBuilder: (context, index) =>
-              pastChats[index].emailFrom == widget.currEmail ?
-              _buildMyMessage(pastChats[index]):
-              _buildOtherMessage(pastChats[index]),
+              reversedMessages[index].emailFrom == widget.currEmail ?
+              _buildMyMessage(reversedMessages[index]):
+              _buildOtherMessage(reversedMessages[index]),
               separatorBuilder: (_, index) => SizedBox(height: 20,),
-              itemCount: pastChats.length,
+              itemCount: reversedMessages.length,
             ),
           ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.only(left: 10, right: 10),
+            height: 50,
+            // width: 400,
+            child: Stack(
+              children: [
+                TextField(
+                  controller: newMessageController,
+                  decoration: InputDecoration(
+                    // fillColor: ColorConstant.deepOrange50,
+                    // filled: true,
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: ColorConstant.borderGrey),
+                    ),
+                    hintText: 'Type your message...',
+                    hintStyle: TextStyle(
+                      // color: ColorConstant.whiteA700,
+                      fontSize: 15,
+                    )
+                  ),
+                ),
+                Positioned(
+                  right: 8,
+                  bottom: 8,
+                  child: GestureDetector(
+                    onTap: (){
+                      sendChat();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: ColorConstant.sendBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.send,
+                        color: ColorConstant.whiteA700,
+                        size: 20,
+                      ),
+
+                    ),
+                  ),
+                ),
+              ],
+            )
+          )
+        )
       ]
     );
   }
 
   Widget _buildMyMessage(Message message){
-    print("myMessage" + message.emailFrom);
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        //time
         Text(
           message.timestamp,
           style: AppStyle.textstyleinterregular15.copyWith(
-              color: ColorConstant.grey,fontSize: getFontSize(15)),
+              color: ColorConstant.grey,fontSize: getFontSize(13)),
+        ),
+        //message
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              border: Border.all(
+                // color: ColorConstant.grey,
+                width: 1,
+                color: ColorConstant.borderGrey,
+              ),
+            color: ColorConstant.deepOrange50,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+
+            )
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 180),
+            child: Text(message.content,
+              style: TextStyle(
+                height: 1.5,
+                // color:
+              ),
+
+            ),
+          )
         ),
       ],
     );
   }
 
   Widget _buildOtherMessage(Message message){
-    print("otherMessage");
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+      //profilePic and message
       children: [
+        Row(
+          children: [
+            //message
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  // color: ColorConstant.grey,
+                  color: ColorConstant.borderGrey,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                  topLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                )
+              ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 180),
+                  child: Text(message.content,
+                    style: TextStyle(
+                      height: 1.5,
+                      // color:
+                    ),
+
+                  ),
+                )
+            )
+
+          ],
+        ),
+
+        //time
         Text(
           message.timestamp,
           style: AppStyle.textstyleinterregular15.copyWith(
-              color: ColorConstant.grey,fontSize: getFontSize(15)),
+              color: ColorConstant.grey,fontSize: getFontSize(13)),
         ),
       ],
     );
+  }
+
+  imageDecode(String imageSource){
+    final decodeBytes = base64Decode(imageSource);
+    return Image.memory(decodeBytes);
+  }
+
+  sendChat() async{
+    if (newMessageController.text != ''){
+      NewMessage newMessage = new NewMessage(
+          emailFrom: widget.currEmail,
+          emailTo: widget.otherEmail,
+          content: newMessageController.text
+      );
+      await APIService().sendChat(newMessage);
+      newMessageController.text = '';
+    }
   }
 
 }

@@ -98,7 +98,7 @@ class AllChatsScreenState extends State<AllChatsScreen> {
                                                   ),
                                                   SizedBox(width: 5),
                                                   Column(
-                                                      mainAxisAlignment: MainAxisAlignment
+                                                      crossAxisAlignment: CrossAxisAlignment
                                                           .start,
                                                       children: [
                                                         Text(
@@ -112,24 +112,27 @@ class AllChatsScreenState extends State<AllChatsScreen> {
                                                                   .black900),
                                                         ),
                                                         SizedBox(height: 5.0,),
-                                                        Text(
-                                                          user.content,
-                                                          style: TextStyle(
-                                                            color: user
-                                                                .isMessageRead
-                                                                ? ColorConstant
-                                                                .grey
-                                                                : ColorConstant
-                                                                .black900,
-                                                            fontWeight: user
-                                                                .isMessageRead
-                                                                ? null
-                                                                : FontWeight.bold,
+                                                        Container(
+                                                          width: MediaQuery.of(context).size.width * 0.5,
+                                                          child: Text(
+                                                            user.content,
+                                                            style: TextStyle(
+                                                              color: user
+                                                                  .isMessageRead
+                                                                  ? ColorConstant
+                                                                  .grey
+                                                                  : ColorConstant
+                                                                  .black900,
+                                                              fontWeight: user
+                                                                  .isMessageRead
+                                                                  ? null
+                                                                  : FontWeight.bold,
 
+                                                            ),
+                                                            overflow: TextOverflow
+                                                                .ellipsis,
                                                           ),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        )
+                                                        ),
                                                       ]
                                                   ),
                                                 ]

@@ -1,6 +1,7 @@
 import 'package:bluewave/core/app_export.dart';
 import 'package:bluewave/presentation/main_matches_page_screen/models/main_matches_page_model.dart';
 import 'package:bluewave/presentation/profile_changing_page_screen/models/profile_changing_page_model.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -12,6 +13,7 @@ import '../../presentation/personal_profile_screen/models/personal_profile_model
 
 class APIService {
   final url = "https://bluewave.mlbrains.com";
+  final bool running = true;
 
   Future<LoginResponseModel> login(UserModel user) async{
     String loginUrl = url + "/login";
@@ -68,22 +70,33 @@ class APIService {
 
   Stream<AllChatsModel> getChatUsers(String email) async*{
     String getChatUsersUrl = url + "/get_recent_chats";
-    await Future.delayed(Duration(seconds: 30));
-    var response = await http.post(Uri.parse(getChatUsersUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
-    var message = jsonDecode(response.body);
-    AllChatsModel result = AllChatsModel.fromJson(message);
-    yield result;
+    while (running){
+      await Future.delayed(Duration(seconds: 10));
+      var response = await http.post(Uri.parse(getChatUsersUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'email': email}));
+      var message = jsonDecode(response.body);
+      print(message);
+      AllChatsModel result = AllChatsModel.fromJson(message);
+      yield result;
+    }
     // yield AllChatsModel.fromJson(message);
 
   }
 
   Stream<ChatWithMatchModel> getPastChats(String currEmail, String otherEmail) async*{
     String getPastChatsUrl = url + "/get_past_chats";
-    await Future.delayed(Duration(seconds: 5));
-    var response = await http.post(Uri.parse(getPastChatsUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'emailCurr': currEmail, 'emailOther': otherEmail}));
-    var message = jsonDecode(response.body);
-    ChatWithMatchModel result = ChatWithMatchModel.fromJson(message);
-    yield result;
+    while (running){
+      await Future.delayed(Duration(seconds: 5));
+      var response = await http.post(Uri.parse(getPastChatsUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: jsonEncode({'emailCurr': currEmail, 'emailOther': otherEmail}));
+      var message = jsonDecode(response.body);
+      print(message);
+      ChatWithMatchModel result = ChatWithMatchModel.fromJson(message);
+      yield result;
+    }
+  }
+
+  Future<void> sendChat(NewMessage newMessage) async{
+    String sendChatUrl = url + "/send_chat";
+    await http.post(Uri.parse(sendChatUrl), headers:{'content-type': 'application/json; charset=UTF-8'}, body: json.encode(newMessage));
   }
 
 
