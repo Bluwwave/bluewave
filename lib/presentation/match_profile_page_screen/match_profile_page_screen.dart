@@ -192,24 +192,34 @@ class MatchProfilePageScreen extends StatelessWidget {
   Widget chatWithMatch(){
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-        margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 25),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: ColorConstant.deepOrange300, width: 1),
-          color: ColorConstant.deepOrange50,
+      child: GestureDetector(
+        onTap: (){
+          Get.toNamed(AppRoutes.chatWithMatchScreen, parameters: {
+            'currEmail': email,
+            'otherEmail': matchEmail,
+            'otherName': match.name,
+          });
+        },
+        child: Container(
+          margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 25),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: ColorConstant.deepOrange300, width: 1),
+            color: ColorConstant.deepOrange50,
+          ),
+          child: Text(
+              "Chat With Match",
+              textAlign: TextAlign.center,
+              style: AppStyle
+                  .textstyleinterregular155
+                  .copyWith(
+                  fontSize:
+                  getFontSize(15))
+          ),
         ),
-        child: Text(
-          "Chat With Match",
-          textAlign: TextAlign.center,
-            style: AppStyle
-              .textstyleinterregular155
-              .copyWith(
-                fontSize:
-                    getFontSize(15))
-        ),
-      )
+      ),
+
     );
   }
 
