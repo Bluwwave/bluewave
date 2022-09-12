@@ -27,6 +27,11 @@ dependencies:
   image_cropper: ^2.0.3
   flutter_tags: ^0.4.9+1
 
+  #permissions
+  permission_handler: ^8.1.2
+  location: ^4.2.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

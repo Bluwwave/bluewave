@@ -12,6 +12,9 @@ import 'package:bluewave/data/api/api_client.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// import 'package:permission_handler/permission_handler.dart';
+import 'package:location/location.dart';
+
 import '../mandatory_info_page_screen/mandatory_info_page_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -323,6 +326,37 @@ class _LoginPageState extends State<LoginPage> {
     // requestModel.email =
     //requestModel.email = provider.user.email;
     // print(login(requestModel));
+    // Location location = new Location();
+    // bool _serviceEnabled;
+    // PermissionStatus _permissionGranted;
+    // LocationData _locationData;
+    //
+    // _serviceEnabled = await location.serviceEnabled();
+    // if (!_serviceEnabled) {
+    //   _serviceEnabled = await location.requestService();
+    //   // if (!_serviceEnabled) {
+    //   //   return;
+    //   // }
+    // }
+    //
+    // _permissionGranted = await location.hasPermission();
+    // if (_permissionGranted == PermissionStatus.denied) {
+    //   _permissionGranted = await location.requestPermission();
+    //   // if (_permissionGranted != PermissionStatus.granted) {
+    //   //   return;
+    //   // }
+    // }
+    //
+    // _locationData = await location.getLocation();
+    // print("location:" + _locationData.toString());
+
+    // var PhotoStatus = await Permission.photos.status;
+    // Location location = new Location();
+    // if (await Permission.locationWhenInUse.request().isGranted) {
+    //   // Either the permission was already granted before or the user just granted it.
+    //
+    //
+    // }
     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     await provider.login();
     final user = FirebaseAuth.instance.currentUser;

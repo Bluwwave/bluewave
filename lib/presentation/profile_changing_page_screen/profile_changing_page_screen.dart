@@ -5,12 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../main_matches_page_screen/main_matches_page_screen.dart';
 import 'controller/profile_changing_page_controller.dart';
 import 'package:bluewave/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 import 'models/profile_changing_page_model.dart';
+
+//Need to add permission later on for ios
 
 
 class ProfileChangingPage extends StatefulWidget{
@@ -164,6 +167,13 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
   }
 
   loadPicker(ImageSource source) async{
+    var permissionStatus = await Permission.storage.status;
+
+    if (permissionStatus != PermissionStatus.granted){
+      permissionStatus = await Permission.storage.request();
+    } else if (permissionStatus != PermissionStatus.denied){
+      openAppSettings();
+    }
     try {
       final XFile? picked = await imagePicker.pickImage(
           source: source,
@@ -209,12 +219,12 @@ class _ProfileChangingPageState extends State<ProfileChangingPage> {
                   loadPicker(ImageSource.gallery);
                 }
               ),
-              ListTile(
-                  title: Text("Take A Picture"),
-                  onTap: (){
-                    // loadPicker(ImageSource.camera);
-                  }
-              ),
+              // ListTile(
+              //     title: Text("Take A Picture"),
+              //     onTap: (){
+              //       // loadPicker(ImageSource.camera);
+              //     }
+              // ),
             ]
           )
 
